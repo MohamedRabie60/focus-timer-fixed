@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Timer Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #3b6546;
+            --card-bg: #1f1f1f;
+            --input-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --accent-color: #1db954;
+            --danger-color: #e74c3c;
+            --secondary-text: #a0a0a0;
+        }
+
+        * { box-sizing: border-box; outline: none; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.5s;
+        }
+
+        /* --- الأزرار العلوية --- */
+        .header-controls {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .focus-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+        .focus-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* زر الخروج من وضع التركيز */
+        .exit-focus-btn {
+            display: none;
+            background: var(--danger-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            font-family: 'Cairo', sans-serif;
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .exit-focus-btn:hover {
+            background: #c0392b;
+        }
+
+        /* --- الساعة --- */
+        .clock-container {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .big-clock {
+            font-size: 5rem;
+            font-weight: 700;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .date-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* --- القائمة --- */
+        .nav-pill {
+            background: rgba(0,0,0,0.2);
+            padding: 5px;
+            border-radius: 12px;
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+        }
+        .nav-pill button {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .nav-pill button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .nav-pill button.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(29, 185, 84, 0.3);
+        }
+
+        /* --- التخطيط --- */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 450px;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* --- كارت الأصوات --- */
+        .sound-item {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .sound-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sound-label { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+        
+        /* زر تشغيل الصوت */
+        .play-btn {
+            background: transparent;
+            border: 1px solid #555;
+            color: #aaa;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .play-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .play-btn.playing {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* --- كارت الإعدادات --- */
+        .main-card { text-align: center; }
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .input-box {
+            background: var(--input-bg);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-box label {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .input-box input[type="number"] {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .input-box input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .btn-action {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn-action.start { background: var(--accent-color); color: white; }
+        .btn-action.pause { background: #f1c40f; color: #1e1e1e; }
+        
+        .timer-running {
+            font-size: 6rem;
+            color: var(--accent-color);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        /* --- وضع التركيز --- */
+        body.focus-active {
+            justify-content: center;
+            padding: 0;
+        }
+        body.focus-active .main-layout, 
+        body.focus-active .nav-pill,
+        body.focus-active .header-controls,
+        body.focus-active .date-badge {
+            display: none !important;
+        }
+        
+        body.focus-active .exit-focus-btn {
+            display: block;
+        }
+
+        body.focus-active .clock-container {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+        }
+        body.focus-active .big-clock {
+            font-size: 8rem;
+            opacity: 0.9;
+        }
+
+        /* عرض البومودورو/المؤقت في وضع التركيز */
+        .focus-timer-display {
+            display: none !important; /* مخفي افتراضياً */
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 20px 40px;
+        }
+        
+        body.focus-active .focus-timer-display.active {
+            display: block !important; /* يظهر فقط لما يكون active */
+        }
+        
+        .focus-timer-display .timer-text {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            font-family: 'Segoe UI', sans-serif;
+            margin-bottom: 5px;
+        }
+        
+        .focus-timer-display .timer-label {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        
+        .focus-timer-display .timer-cycle {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .focus-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .focus-control-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        
+        .focus-control-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .focus-control-btn.pause-btn {
+            background: rgba(241, 196, 15, 0.2);
+            border-color: rgba(241, 196, 15, 0.4);
+        }
+        
+        .focus-control-btn.stop-btn {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231, 76, 60, 0.4);
+        }
+
+        /* الأذكار */
+        .athkar-container {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            text-align: center;
+            color: #f1c40f;
+            opacity: 0;
+            transition: opacity 1s;
+            pointer-events: none;
+            width: 90%;
+            max-width: 600px;
+        }
+        body.focus-active .athkar-container { opacity: 1; }
+
+        .hidden { display: none !important; }
+
+        /* تحسين قائمة المهام */
+        #task-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: #2d2d2d;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .task-add-btn {
+            background: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            width: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: white;
+            transition: 0.3s;
+        }
+        .task-add-btn:hover {
+            background: #17a042;
+        }
+
+        .task-item {
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .task-item:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        .task-text {
+            cursor: pointer;
+            flex: 1;
+            text-align: right;
+        }
+        .task-text.completed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        .task-delete-btn {
+            background: var(--danger-color);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .task-delete-btn:hover {
+            background: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            .big-clock { font-size: 3.5rem; }
+            body.focus-active .big-clock { font-size: 4.5rem; }
+            .athkar-container { font-size: 1.4rem; }
+            .timer-running { font-size: 4rem; }
+            .header-controls {
+                padding: 0 10px;
+            }
+            
+            /* إصلاح وضع التركيز على الموبايل */
+            body.focus-active .clock-container {
+                top: 30%;
+            }
+            
+            .focus-timer-display {
+                top: 55%;
+                padding: 15px 25px;
+            }
+            
+            .focus-timer-display .timer-text {
+                font-size: 3rem;
+            }
+            
+            .focus-timer-display .timer-label {
+                font-size: 1rem;
+            }
+            
+            .focus-timer-display .timer-cycle {
+                font-size: 0.9rem;
+            }
+            
+            .focus-control-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            
+            body.focus-active .athkar-container {
+                bottom: 30px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="exit-focus-btn" onclick="toggleFocusMode()">✕ خروج من التركيز</button>
+
+    <div class="header-controls">
+        <button class="focus-btn" onclick="toggleFocusMode()">✨ وضع التركيز</button>
+    </div>
+
+    <div class="clock-container">
+        <div class="big-clock" id="clock">00:00:00</div>
+        <div class="date-badge" id="date">--</div>
+    </div>
+
+    <!-- عرض البومودورو/المؤقت في وضع التركيز -->
+    <div class="focus-timer-display" id="focus-timer-display">
+        <div class="timer-label" id="focus-timer-label">🎯 وقت التركيز</div>
+        <div class="timer-text" id="focus-timer-text">25:00</div>
+        <div class="timer-cycle" id="focus-timer-cycle"></div>
+        <div class="focus-controls">
+            <button class="focus-control-btn pause-btn" id="focus-pause-btn" onclick="togglePausePomo()">⏸ إيقاف</button>
+            <button class="focus-control-btn stop-btn" onclick="stopFocusTimer()">⏹ إنهاء</button>
+        </div>
+    </div>
+
+    <div class="nav-pill">
+        <button class="active" onclick="switchTab('pomo')" id="btn-pomo">⏰ بومودورو</button>
+        <button onclick="switchTab('timer')" id="btn-timer">⏳ مؤقت</button>
+        <button onclick="switchTab('tasks')" id="btn-tasks">📝 المهام</button>
+    </div>
+
+    <div class="main-layout" id="main-content">
+        
+        <div class="sidebar">
+            <div class="card">
+                <div style="color:#aaa; margin-bottom:15px; font-weight:bold;">🔊 أصوات الطبيعة</div>
+                
+                <div class="sound-item">
+                    <div class="sound-header-row">
+                        <div class="sound-label">🌧️ صوت المطر</div>
+                        <button class="play-btn" id="btn-rain" onclick="toggleSound('rain')">▶</button>
+                    </div>
+                    <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVolume('rain', this.value)">
+                </div>
+
+                <div class="sound-item">
+                    <div class="sound-header-row">
+                        <div class="sound-label">⚡ صوت الرعد</div>
+                        <button class="play-btn" id="btn-thunder" onclick="toggleSound('thunder')">▶</button>
+                    </div>
+                    <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVolume('thunder', this.value)">
+                </div>
+
+                <div class="sound-item">
+                    <div class="sound-header-row">
+                        <div class="sound-label">💨 صوت الرياح</div>
+                        <button class="play-btn" id="btn-wind" onclick="toggleSound('wind')">▶</button>
+                    </div>
+                    <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVolume('wind', this.value)">
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:15px; font-size:0.9rem; color:#ccc; line-height:1.6;">
+                🔔 <b>تلميح:</b> عند تفعيل وضع التركيز بالأعلى، ستختفي جميع القوائم وستظهر لك الأذكار بشكل تلقائي أسفل الشاشة.
+            </div>
+        </div>
+
+        <div class="card main-card">
+            
+            <div id="pomo-view">
+                <div id="pomo-setup">
+                    <h2>تجهيز الجلسة</h2>
+                    <div class="grid-inputs">
+                        <div class="input-box">
+                            <label>التركيز (دقيقة)</label>
+                            <input type="number" id="p_focus" value="25" min="1" max="120">
+                        </div>
+                        <div class="input-box">
+                            <label>الراحة (دقيقة)</label>
+                            <input type="number" id="p_short" value="5" min="1" max="60">
+                        </div>
+                        <div class="input-box" style="justify-content:center; cursor:pointer;" onclick="toggleCheckbox()">
+                            <label>انتقال آلي</label>
+                            <input type="checkbox" id="p_auto" checked>
+                        </div>
+                        <div class="input-box">
+                            <label>الدورات</label>
+                            <input type="number" id="p_cycles" value="4" min="1" max="20">
+                        </div>
+                    </div>
+                    <button class="btn-action start" onclick="startPomo()">
+                        <span>▶</span> ابدأ الجلسة
+                    </button>
+                </div>
+
+                <div id="pomo-running" class="hidden">
+                    <div id="p_status_text" style="color:#aaa; font-size:1.2rem;">🎯 وقت التركيز</div>
+                    <div class="timer-running" id="p_timer_display">25:00</div>
+                    <div style="margin-bottom:20px; color:#888;">دورة: <span id="cycle_display">1/4</span></div>
+                    
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action pause" onclick="togglePausePomo()" id="p_pause_btn">⏸ إيقاف</button>
+                        <button class="btn-action" style="background:var(--danger-color); color:white;" onclick="resetPomo()">⏹ إنهاء</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="timer-view" class="hidden">
+                <h2>مؤقت تنازلي</h2>
+                <div class="grid-inputs" id="timer-setup">
+                    <div class="input-box"><label>دقائق</label><input type="number" id="t_min" value="10" min="0" max="999"></div>
+                    <div class="input-box"><label>ثواني</label><input type="number" id="t_sec" value="0" min="0" max="59"></div>
+                </div>
+                <div id="timer-running-display" class="hidden">
+                    <div class="timer-running" id="t_display">00:00</div>
+                </div>
+                <button class="btn-action start" onclick="handleTimerBtn()" id="t_action_btn">▶ ابدأ المؤقت</button>
+            </div>
+
+            <div id="tasks-view" class="hidden">
+                <h2>قائمة المهام</h2>
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <input type="text" id="task-input" placeholder="أضف مهمة جديدة...">
+                    <button onclick="addTask()" class="task-add-btn">+</button>
+                </div>
+                <ul id="task-list" style="list-style:none; padding:0; text-align:right;"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="athkar-box" class="athkar-container">سبحان الله</div>
+
+
+
+    <script>
+        // --- نظام الأصوات باستخدام Web Audio API ---
+        let audioContext;
+        let rainNoiseNode, thunderNoiseNode, windNoiseNode;
+        let rainGain, thunderGain, windGain;
+        let activeNatureSounds = { rain: false, thunder: false, wind: false };
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            return audioContext;
+        }
+
+        // --- توليد أصوات الطبيعة ---
+        function createRainSound() {
+            const ctx = initAudioContext();
+            
+            // White noise للمطر
+            const bufferSize = 2 * ctx.sampleRate;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            
+            const whiteNoise = ctx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            whiteNoise.loop = true;
+            
+            // فلتر لجعل الصوت يشبه المطر
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 1000;
+            
+            rainGain = ctx.createGain();
+            rainGain.gain.value = 0.5;
+            
+            whiteNoise.connect(filter);
+            filter.connect(rainGain);
+            rainGain.connect(ctx.destination);
+            
+            whiteNoise.start(0);
+            return whiteNoise;
+        }
+
+        function createThunderSound() {
+            const ctx = initAudioContext();
+            
+            const bufferSize = 2 * ctx.sampleRate;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = (Math.random() * 2 - 1) * 0.3;
+            }
+            
+            const thunder = ctx.createBufferSource();
+            thunder.buffer = noiseBuffer;
+            thunder.loop = true;
+            
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 400;
+            filter.Q.value = 0.5;
+            
+            thunderGain = ctx.createGain();
+            thunderGain.gain.value = 0.5;
+            
+            thunder.connect(filter);
+            filter.connect(thunderGain);
+            thunderGain.connect(ctx.destination);
+            
+            thunder.start(0);
+            return thunder;
+        }
+
+        function createWindSound() {
+            const ctx = initAudioContext();
+            
+            const bufferSize = 2 * ctx.sampleRate;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = (Math.random() * 2 - 1) * 0.4;
+            }
+            
+            const wind = ctx.createBufferSource();
+            wind.buffer = noiseBuffer;
+            wind.loop = true;
+            
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 800;
+            filter.Q.value = 1;
+            
+            windGain = ctx.createGain();
+            windGain.gain.value = 0.5;
+            
+            wind.connect(filter);
+            filter.connect(windGain);
+            windGain.connect(ctx.destination);
+            
+            wind.start(0);
+            return wind;
+        }
+
+        // --- تشغيل أصوات الطبيعة ---
+        function toggleSound(type) {
+            const btn = document.getElementById('btn-' + type);
+            
+            if (!activeNatureSounds[type]) {
+                // تشغيل الصوت
+                if (type === 'rain') {
+                    rainNoiseNode = createRainSound();
+                } else if (type === 'thunder') {
+                    thunderNoiseNode = createThunderSound();
+                } else if (type === 'wind') {
+                    windNoiseNode = createWindSound();
+                }
+                
+                activeNatureSounds[type] = true;
+                btn.innerHTML = "⏸";
+                btn.classList.add('playing');
+            } else {
+                // إيقاف الصوت
+                if (type === 'rain' && rainNoiseNode) {
+                    rainNoiseNode.stop();
+                    rainNoiseNode = null;
+                } else if (type === 'thunder' && thunderNoiseNode) {
+                    thunderNoiseNode.stop();
+                    thunderNoiseNode = null;
+                } else if (type === 'wind' && windNoiseNode) {
+                    windNoiseNode.stop();
+                    windNoiseNode = null;
+                }
+                
+                activeNatureSounds[type] = false;
+                btn.innerHTML = "▶";
+                btn.classList.remove('playing');
+            }
+        }
+
+        function setVolume(type, val) {
+            const volume = parseFloat(val);
+            if (type === 'rain' && rainGain) {
+                rainGain.gain.value = volume;
+            } else if (type === 'thunder' && thunderGain) {
+                thunderGain.gain.value = volume;
+            } else if (type === 'wind' && windGain) {
+                windGain.gain.value = volume;
+            }
+        }
+
+        // --- أصوات البومودورو ---
+        function playGentleSound() {
+            const ctx = initAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            
+            // نغمة لطيفة وهادئة
+            oscillator.frequency.value = 523.25; // C5
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, ctx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+            
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.8);
+        }
+
+        function playBellSound() {
+            const ctx = initAudioContext();
+            
+            // جرس مدرسة - عدة نغمات متتالية
+            const times = [0, 0.15, 0.3, 0.45];
+            const frequencies = [659.25, 783.99, 659.25, 783.99]; // E5, G5, E5, G5
+            
+            times.forEach((time, index) => {
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                oscillator.frequency.value = frequencies[index];
+                oscillator.type = 'sine';
+                
+                const startTime = ctx.currentTime + time;
+                gainNode.gain.setValueAtTime(0, startTime);
+                gainNode.gain.linearRampToValueAtTime(0.4, startTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+                
+                oscillator.start(startTime);
+                oscillator.stop(startTime + 0.3);
+            });
+        }
+
+        function playSound(type) {
+            try {
+                if (type === 'snd_gentle') {
+                    playGentleSound();
+                } else if (type === 'snd_bell') {
+                    playBellSound();
+                }
+            } catch (e) {
+                console.log("فشل تشغيل الصوت:", e);
+            }
+        }
+
+        // --- الساعة ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', {hour12: false});
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').innerText = now.toLocaleDateString('ar-EG', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- التبويبات ---
+        function switchTab(tab) {
+            ['pomo', 'timer', 'tasks'].forEach(t => {
+                document.getElementById(t + '-view').classList.add('hidden');
+                document.getElementById('btn-' + t).classList.remove('active');
+            });
+            document.getElementById(tab + '-view').classList.remove('hidden');
+            document.getElementById('btn-' + tab).classList.add('active');
+        }
+
+        // --- إصلاح Checkbox ---
+        function toggleCheckbox() {
+            const checkbox = document.getElementById('p_auto');
+            checkbox.checked = !checkbox.checked;
+        }
+
+        // --- منطق البومودورو ---
+        let pTimer, pTimeLeft, pIsFocus = true, pCurrentCycle = 1, pIsPaused = false;
+        
+        function startPomo() {
+            const focusMin = parseInt(document.getElementById('p_focus').value);
+            const breakMin = parseInt(document.getElementById('p_short').value);
+            const cycles = parseInt(document.getElementById('p_cycles').value);
+            
+            if (focusMin <= 0 || breakMin <= 0 || cycles <= 0) {
+                alert("يرجى إدخال قيم صحيحة");
+                return;
+            }
+            
+            document.getElementById('pomo-setup').classList.add('hidden');
+            document.getElementById('pomo-running').classList.remove('hidden');
+            pCurrentCycle = 1;
+            pIsFocus = true;
+            runPomoSession();
+        }
+
+        function runPomoSession() {
+            const focusMin = parseInt(document.getElementById('p_focus').value);
+            const breakMin = parseInt(document.getElementById('p_short').value);
+            
+            pTimeLeft = (pIsFocus ? focusMin : breakMin) * 60;
+            
+            document.getElementById('p_status_text').innerText = pIsFocus ? "🎯 وقت التركيز" : "☕ وقت الراحة";
+            document.getElementById('cycle_display').innerText = `${pCurrentCycle}/${document.getElementById('p_cycles').value}`;
+            
+            // 🔊 تشغيل الصوت المناسب
+            if (pIsFocus) {
+                playSound('snd_gentle'); // صوت لطيف عند بداية العمل
+            } else {
+                playSound('snd_bell'); // جرس مدرسة عند بداية الراحة
+            }
+
+            clearInterval(pTimer);
+            pIsPaused = false;
+            document.getElementById('p_pause_btn').innerText = "⏸ إيقاف";
+            pTimer = setInterval(pTick, 1000);
+            updatePomoDisplay();
+            
+            // تحديث رؤية وضع التركيز
+            updateFocusTimerVisibility();
+        }
+
+        function pTick() {
+            if (!pIsPaused) {
+                pTimeLeft--;
+                updatePomoDisplay();
+                if (pTimeLeft <= 0) {
+                    clearInterval(pTimer);
+                    handlePomoEnd();
+                }
+            }
+        }
+
+        function handlePomoEnd() {
+            if (pIsFocus) {
+                // 🔊 انتهى وقت العمل -> تشغيل جرس المدرسة
+                playSound('snd_bell');
+                pIsFocus = false;
+                if (document.getElementById('p_auto').checked) {
+                    setTimeout(() => runPomoSession(), 2000);
+                }
+            } else {
+                // انتهت الراحة
+                const totalCycles = parseInt(document.getElementById('p_cycles').value);
+                if (pCurrentCycle < totalCycles) {
+                    // 🔊 تشغيل صوت لطيف قبل بدء دورة جديدة
+                    playSound('snd_gentle');
+                    pCurrentCycle++;
+                    pIsFocus = true;
+                    if (document.getElementById('p_auto').checked) {
+                        setTimeout(() => runPomoSession(), 2000);
+                    }
+                } else {
+                    // 🔊 انتهت الجلسة بالكامل
+                    playSound('snd_bell');
+                    setTimeout(() => {
+                        alert("🎉 انتهت الجلسة بالكامل! أحسنت!");
+                        resetPomo();
+                    }, 500);
+                }
+            }
+        }
+
+        function updatePomoDisplay() {
+            let m = Math.floor(pTimeLeft / 60);
+            let s = pTimeLeft % 60;
+            const timeStr = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+            
+            document.getElementById('p_timer_display').innerText = timeStr;
+            
+            // تحديث عرض وضع التركيز
+            document.getElementById('focus-timer-text').innerText = timeStr;
+            document.getElementById('focus-timer-label').innerText = pIsFocus ? "🎯 وقت التركيز" : "☕ وقت الراحة";
+            document.getElementById('focus-timer-cycle').innerText = `دورة: ${pCurrentCycle}/${document.getElementById('p_cycles').value}`;
+        }
+
+        function togglePausePomo() {
+            pIsPaused = !pIsPaused;
+            const btnText = pIsPaused ? "▶ استئناف" : "⏸ إيقاف";
+            document.getElementById('p_pause_btn').innerText = btnText;
+            document.getElementById('focus-pause-btn').innerText = btnText;
+        }
+        
+        function stopFocusTimer() {
+            if (pTimer) {
+                resetPomo();
+            } else if (tRunning) {
+                resetTimerDisplay();
+            }
+        }
+        
+        function resetPomo() {
+            clearInterval(pTimer);
+            pIsPaused = false;
+            document.getElementById('pomo-setup').classList.remove('hidden');
+            document.getElementById('pomo-running').classList.add('hidden');
+            
+            // إخفاء عرض وضع التركيز
+            updateFocusTimerVisibility();
+        }
+
+        // --- وضع التركيز والأذكار ---
+        let athkarInterval;
+        const athkar = [
+            "سبحان الله وبحمده",
+            "أستغفر الله العظيم",
+            "لا حول ولا قوة إلا بالله",
+            "اللهم صل على محمد",
+            "الحمد لله رب العالمين",
+            "لا إله إلا الله",
+            "الله أكبر",
+            "سبحان الله العظيم وبحمده",
+            "اللهم إني أعوذ بك من الهم والحزن"
+        ];
+
+        function toggleFocusMode() {
+            document.body.classList.toggle('focus-active');
+            
+            if(document.body.classList.contains('focus-active')) {
+                showAthkar();
+                athkarInterval = setInterval(showAthkar, 8000);
+            } else {
+                clearInterval(athkarInterval);
+            }
+        }
+
+        function showAthkar() {
+            const el = document.getElementById('athkar-box');
+            el.style.opacity = '0';
+            
+            setTimeout(() => {
+                el.innerText = athkar[Math.floor(Math.random() * athkar.length)];
+                el.style.opacity = '1';
+            }, 1000);
+        }
+
+        // --- المهام ---
+        function addTask() {
+            const input = document.getElementById('task-input');
+            const val = input.value.trim();
+            
+            if(val) {
+                const li = document.createElement('li');
+                li.className = 'task-item';
+                
+                const span = document.createElement('span');
+                span.className = 'task-text';
+                span.textContent = val;
+                span.onclick = function() {
+                    this.classList.toggle('completed');
+                };
+                
+                const btn = document.createElement('button');
+                btn.className = 'task-delete-btn';
+                btn.innerHTML = '✕';
+                btn.onclick = function() {
+                    li.remove();
+                };
+                
+                li.appendChild(span);
+                li.appendChild(btn);
+                document.getElementById('task-list').appendChild(li);
+                input.value = '';
+            }
+        }
+
+        // إضافة مهمة بالضغط على Enter
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskInput = document.getElementById('task-input');
+            if (taskInput) {
+                taskInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addTask();
+                    }
+                });
+            }
+        });
+
+        // --- المؤقت العادي ---
+        let tTimer, tRunning = false, tTotalTime = 0;
+        
+        function handleTimerBtn() {
+            if(!tRunning) {
+                const min = parseInt(document.getElementById('t_min').value) || 0;
+                const sec = parseInt(document.getElementById('t_sec').value) || 0;
+                tTotalTime = min * 60 + sec;
+                
+                if(tTotalTime <= 0) {
+                    alert("يرجى إدخال وقت صحيح");
+                    return;
+                }
+                
+                document.getElementById('timer-setup').classList.add('hidden');
+                document.getElementById('timer-running-display').classList.remove('hidden');
+                document.getElementById('t_action_btn').innerText = "⏹ إلغاء";
+                document.getElementById('t_action_btn').style.background = "var(--danger-color)";
+                tRunning = true;
+                
+                // تحديث رؤية وضع التركيز
+                updateFocusTimerVisibility();
+                
+                tTimer = setInterval(() => {
+                    tTotalTime--;
+                    updateTimerDisplay();
+                    
+                    if(tTotalTime <= 0) {
+                        clearInterval(tTimer);
+                        playSound('snd_bell');
+                        setTimeout(() => {
+                            alert('⏰ انتهى الوقت!');
+                            resetTimerDisplay();
+                        }, 500);
+                    }
+                }, 1000);
+                
+                updateTimerDisplay();
+            } else {
+                clearInterval(tTimer);
+                resetTimerDisplay();
+            }
+        }
+        
+        function updateTimerDisplay() {
+            let m = Math.floor(tTotalTime / 60);
+            let s = tTotalTime % 60;
+            const timeStr = `${m}:${s<10?'0'+s:s}`;
+            
+            document.getElementById('t_display').innerText = timeStr;
+            
+            // تحديث عرض وضع التركيز
+            document.getElementById('focus-timer-text').innerText = timeStr;
+            document.getElementById('focus-timer-label').innerText = "⏳ المؤقت التنازلي";
+            document.getElementById('focus-timer-cycle').innerText = "";
+        }
+        
+        function updateFocusTimerVisibility() {
+            const focusDisplay = document.getElementById('focus-timer-display');
+            const focusControls = focusDisplay.querySelector('.focus-controls');
+            
+            // إظهار التايمر إذا كان البومودورو أو المؤقت شغال
+            if (pTimer || tRunning) {
+                focusDisplay.classList.add('active');
+                
+                // تحديث الأزرار حسب النوع
+                if (pTimer) {
+                    focusControls.style.display = 'flex';
+                    document.getElementById('focus-pause-btn').style.display = 'block';
+                } else if (tRunning) {
+                    focusControls.style.display = 'flex';
+                    document.getElementById('focus-pause-btn').style.display = 'none';
+                }
+            } else {
+                // إخفاء عرض التايمر
+                focusDisplay.classList.remove('active');
+            }
+        }
+        
+        function resetTimerDisplay() {
+            tRunning = false;
+            clearInterval(tTimer);
+            document.getElementById('timer-setup').classList.remove('hidden');
+            document.getElementById('timer-running-display').classList.add('hidden');
+            document.getElementById('t_action_btn').innerText = "▶ ابدأ المؤقت";
+            document.getElementById('t_action_btn').style.background = "var(--accent-color)";
+            
+            // إخفاء عرض وضع التركيز
+            updateFocusTimerVisibility();
+        }
+    </script>
+</body>
+</html>
