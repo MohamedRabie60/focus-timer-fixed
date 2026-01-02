@@ -296,7 +296,7 @@
 
         body.focus-active .clock-container {
             position: fixed;
-            top: 40%;
+            top: 35%;
             left: 50%;
             transform: translate(-50%, -50%);
             margin: 0;
@@ -310,7 +310,7 @@
         .focus-timer-display {
             display: none !important; /* مخفي افتراضياً */
             position: fixed;
-            top: 55%;
+            top: 60%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
@@ -322,22 +322,23 @@
         }
         
         .focus-timer-display .timer-text {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: bold;
             color: var(--accent-color);
             font-family: 'Segoe UI', sans-serif;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .focus-timer-display .timer-label {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #aaa;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .focus-timer-display .timer-cycle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #666;
+            margin-bottom: 15px;
         }
         
         .focus-controls {
@@ -376,7 +377,7 @@
         /* الأذكار */
         .athkar-container {
             position: fixed;
-            bottom: 50px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 1.8rem;
@@ -389,6 +390,43 @@
             max-width: 600px;
         }
         body.focus-active .athkar-container { opacity: 1; }
+
+        /* عرض الصلاة القادمة في وضع التركيز */
+        .focus-prayer-display {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+            direction: rtl;
+        }
+        
+        body.focus-active .focus-prayer-display {
+            display: block;
+        }
+        
+        #focus-prayer-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        
+        #focus-next-prayer-name {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        #focus-next-prayer-time {
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+        }
 
         .hidden { display: none !important; }
 
@@ -457,6 +495,72 @@
             background: #c0392b;
         }
 
+        /* --- الإحصائيات --- */
+        .stat-card {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            font-family: 'Segoe UI', sans-serif;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        #stats-view h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* --- أوقات الصلاة --- */
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        
+        .prayer-item:hover {
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .prayer-item.active {
+            background: rgba(29, 185, 84, 0.2);
+            border: 1px solid rgba(29, 185, 84, 0.4);
+        }
+        
+        .prayer-name {
+            font-weight: 600;
+            color: #ddd;
+        }
+        
+        .prayer-item.active .prayer-name {
+            color: var(--accent-color);
+        }
+        
+        .prayer-time {
+            font-family: 'Segoe UI', sans-serif;
+            color: #aaa;
+            font-weight: bold;
+        }
+        
+        .prayer-item.active .prayer-time {
+            color: var(--accent-color);
+        }
+
         @media (max-width: 768px) {
             .main-layout {
                 grid-template-columns: 1fr;
@@ -475,21 +579,25 @@
                 top: 30%;
             }
             
+            body.focus-active .big-clock {
+                font-size: 4rem;
+            }
+            
             .focus-timer-display {
                 top: 55%;
                 padding: 15px 25px;
             }
             
             .focus-timer-display .timer-text {
-                font-size: 3rem;
+                font-size: 2.5rem;
             }
             
             .focus-timer-display .timer-label {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             
             .focus-timer-display .timer-cycle {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
             
             .focus-control-btn {
@@ -498,8 +606,25 @@
             }
             
             body.focus-active .athkar-container {
-                bottom: 30px;
+                bottom: 50px;
                 font-size: 1.2rem;
+            }
+            
+            /* عرض الصلاة في وضع التركيز - موبايل */
+            .focus-prayer-display {
+                top: 10px;
+                left: 10px;
+                right: auto;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            #focus-prayer-content {
+                font-size: 0.95rem;
+            }
+            
+            #focus-time-until {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -532,11 +657,68 @@
         <button class="active" onclick="switchTab('pomo')" id="btn-pomo">⏰ بومودورو</button>
         <button onclick="switchTab('timer')" id="btn-timer">⏳ مؤقت</button>
         <button onclick="switchTab('tasks')" id="btn-tasks">📝 المهام</button>
+        <button onclick="switchTab('stats')" id="btn-stats">📊 الإحصائيات</button>
     </div>
 
     <div class="main-layout" id="main-content">
         
         <div class="sidebar">
+            <!-- أوقات الصلاة -->
+            <div class="card" style="margin-bottom: 15px;">
+                <div style="color:#aaa; margin-bottom:15px; font-weight:bold; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🕌 أوقات الصلاة</span>
+                    <button onclick="refreshPrayerTimes()" style="background: transparent; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem;" title="تحديث">🔄</button>
+                </div>
+                
+                <!-- اختيار المدينة -->
+                <div style="margin-bottom: 15px;">
+                    <select id="city-select" onchange="getPrayerTimesByCity()" style="width: 100%; padding: 10px; border-radius: 8px; background: var(--input-bg); color: white; border: 1px solid #444; font-family: 'Cairo', sans-serif;">
+                        <option value="">اختر المدينة</option>
+                        <option value="Cairo">القاهرة</option>
+                        <option value="Alexandria">الإسكندرية</option>
+                        <option value="Giza">الجيزة</option>
+                        <option value="Shubra El Kheima">شبرا الخيمة</option>
+                        <option value="Port Said">بورسعيد</option>
+                        <option value="Suez">السويس</option>
+                        <option value="Luxor">الأقصر</option>
+                        <option value="Mansoura">المنصورة</option>
+                        <option value="Tanta">طنطا</option>
+                        <option value="Asyut">أسيوط</option>
+                        <option value="Ismailia">الإسماعيلية</option>
+                        <option value="Fayyum">الفيوم</option>
+                        <option value="Zagazig">الزقازيق</option>
+                        <option value="Aswan">أسوان</option>
+                        <option value="Damietta">دمياط</option>
+                        <option value="Damanhur">دمنهور</option>
+                        <option value="Minya">المنيا</option>
+                        <option value="Beni Suef">بني سويف</option>
+                        <option value="Qena">قنا</option>
+                        <option value="Sohag">سوهاج</option>
+                    </select>
+                    <div style="margin-top: 8px; text-align: center;">
+                        <button onclick="getPrayerTimes()" style="background: rgba(255,255,255,0.1); color: #aaa; border: 1px solid #444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: 'Cairo', sans-serif;">
+                            📍 أو استخدم موقعي الحالي
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="prayer-times-container">
+                    <div style="text-align: center; color: #666; padding: 20px;">
+                        <div style="margin-bottom: 10px;">يرجى اختيار المدينة من القائمة أعلاه</div>
+                    </div>
+                </div>
+                
+                <!-- الصلاة القادمة -->
+                <div id="next-prayer-info" style="display: none; background: rgba(29, 185, 84, 0.1); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid rgba(29, 185, 84, 0.3);">
+                    <div style="font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">الصلاة القادمة:</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span id="next-prayer-name" style="font-weight: bold; color: var(--accent-color);">الفجر</span>
+                        <span id="next-prayer-time" style="font-weight: bold;">05:30</span>
+                    </div>
+                    <div id="time-until-prayer" style="font-size: 0.8rem; color: #888; margin-top: 5px;">بعد 3 ساعات</div>
+                </div>
+            </div>
+
             <div class="card">
                 <div style="color:#aaa; margin-bottom:15px; font-weight:bold;">🔊 أصوات الطبيعة</div>
                 
@@ -581,15 +763,19 @@
                             <input type="number" id="p_focus" value="25" min="1" max="120">
                         </div>
                         <div class="input-box">
-                            <label>الراحة (دقيقة)</label>
+                            <label>الراحة القصيرة (دقيقة)</label>
                             <input type="number" id="p_short" value="5" min="1" max="60">
+                        </div>
+                        <div class="input-box">
+                            <label>الراحة الطويلة (دقيقة)</label>
+                            <input type="number" id="p_long" value="15" min="5" max="60">
                         </div>
                         <div class="input-box" style="justify-content:center; cursor:pointer;" onclick="toggleCheckbox()">
                             <label>انتقال آلي</label>
                             <input type="checkbox" id="p_auto" checked>
                         </div>
                         <div class="input-box">
-                            <label>الدورات</label>
+                            <label>الدورات قبل الراحة الطويلة</label>
                             <input type="number" id="p_cycles" value="4" min="1" max="20">
                         </div>
                     </div>
@@ -603,7 +789,7 @@
                     <div class="timer-running" id="p_timer_display">25:00</div>
                     <div style="margin-bottom:20px; color:#888;">دورة: <span id="cycle_display">1/4</span></div>
                     
-                    <div style="display:flex; gap:10px;">
+                    <div style="display:flex; gap:10px; margin-bottom: 10px;">
                         <button class="btn-action pause" onclick="togglePausePomo()" id="p_pause_btn">⏸ إيقاف</button>
                         <button class="btn-action" style="background:var(--danger-color); color:white;" onclick="resetPomo()">⏹ إنهاء</button>
                     </div>
@@ -630,14 +816,478 @@
                 </div>
                 <ul id="task-list" style="list-style:none; padding:0; text-align:right;"></ul>
             </div>
+
+            <div id="stats-view" class="hidden">
+                <h2>📊 الإحصائيات</h2>
+                
+                <!-- إحصائيات اليوم -->
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="margin-top:0; color: var(--accent-color);">📅 إحصائيات اليوم</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="today-cycles">0</div>
+                            <div class="stat-label">دورات مكتملة</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="today-time">0</div>
+                            <div class="stat-label">دقيقة تركيز</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- إحصائيات الأسبوع -->
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="margin-top:0; color: #f1c40f;">📈 إحصائيات الأسبوع</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="week-cycles">0</div>
+                            <div class="stat-label">دورات مكتملة</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="week-time">0</div>
+                            <div class="stat-label">دقيقة تركيز</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Streak -->
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
+                    <h3 style="margin-top:0; color: #e74c3c;">🔥 السلسلة</h3>
+                    <div class="stat-value" id="streak-days" style="font-size: 3rem;">0</div>
+                    <div class="stat-label">يوم متتالي</div>
+                </div>
+
+                <!-- زر المشاركة -->
+                <button class="btn-action" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="shareAchievement()">
+                    <span>📤</span> شارك إنجازك
+                </button>
+
+                <!-- زر إعادة التعيين -->
+                <button class="btn-action" style="background: var(--danger-color); margin-top: 10px;" onclick="resetStats()">
+                    <span>🔄</span> إعادة تعيين الإحصائيات
+                </button>
+            </div>
         </div>
     </div>
 
     <div id="athkar-box" class="athkar-container">سبحان الله</div>
 
+    <!-- عرض الصلاة القادمة في وضع التركيز -->
+    <div id="focus-prayer-display" class="focus-prayer-display">
+        <div id="focus-prayer-content">
+            <span id="focus-next-prayer-name">الفجر</span>
+            <span id="focus-next-prayer-time">05:31</span>
+        </div>
+        <div id="focus-time-until" style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">بعد 9 ساعة و 53 دقيقة</div>
+    </div>
+
 
 
     <script>
+        // --- نظام أوقات الصلاة ---
+        let prayerTimes = null;
+        let prayerCheckInterval = null;
+        let lastNotificationTime = null;
+        let nextPrayerData = { name: '', time: '', minutesLeft: 0 };
+        
+        const prayerNames = {
+            Fajr: 'الفجر',
+            Dhuhr: 'الظهر',
+            Asr: 'العصر',
+            Maghrib: 'المغرب',
+            Isha: 'العشاء'
+        };
+
+        // الحصول على أوقات الصلاة حسب المدينة
+        async function getPrayerTimesByCity() {
+            const citySelect = document.getElementById('city-select');
+            const city = citySelect.value;
+            
+            if (!city) {
+                alert('يرجى اختيار المدينة');
+                return;
+            }
+            
+            try {
+                const date = new Date();
+                // استخدام الطريقة المصرية (method=5) للحصول على أوقات أدق
+                const response = await fetch(
+                    `https://api.aladhan.com/v1/timingsByCity/${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}?city=${city}&country=Egypt&method=5`
+                );
+                
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    prayerTimes = data.data.timings;
+                    displayPrayerTimes();
+                    
+                    // حفظ المدينة
+                    localStorage.setItem('selectedCity', city);
+                    
+                    // بدء فحص الصلوات
+                    if (prayerCheckInterval) clearInterval(prayerCheckInterval);
+                    prayerCheckInterval = setInterval(checkUpcomingPrayer, 60000); // كل دقيقة
+                    checkUpcomingPrayer(); // فحص فوري
+                }
+            } catch (error) {
+                console.error('Error fetching prayer times:', error);
+                alert('حدث خطأ في جلب أوقات الصلاة');
+            }
+        }
+
+        // الحصول على أوقات الصلاة حسب الموقع
+        async function getPrayerTimes() {
+            if (!navigator.geolocation) {
+                alert('المتصفح لا يدعم تحديد الموقع');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    try {
+                        const date = new Date();
+                        // استخدام الطريقة المصرية (method=5)
+                        const response = await fetch(
+                            `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=5`
+                        );
+                        
+                        const data = await response.json();
+                        
+                        if (data.code === 200) {
+                            prayerTimes = data.data.timings;
+                            displayPrayerTimes();
+                            
+                            // حفظ الموقع
+                            localStorage.setItem('prayerLocation', JSON.stringify({ lat, lng }));
+                            document.getElementById('city-select').value = '';
+                            
+                            // بدء فحص الصلوات
+                            if (prayerCheckInterval) clearInterval(prayerCheckInterval);
+                            prayerCheckInterval = setInterval(checkUpcomingPrayer, 60000);
+                            checkUpcomingPrayer();
+                        }
+                    } catch (error) {
+                        console.error('Error fetching prayer times:', error);
+                        alert('حدث خطأ في جلب أوقات الصلاة');
+                    }
+                },
+                (error) => {
+                    alert('يرجى السماح بالوصول للموقع أو اختر المدينة يدوياً');
+                }
+            );
+        }
+
+        // عرض أوقات الصلاة
+        function displayPrayerTimes() {
+            if (!prayerTimes) return;
+            
+            const container = document.getElementById('prayer-times-container');
+            const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            
+            let html = '';
+            prayers.forEach(prayer => {
+                const time = prayerTimes[prayer];
+                html += `
+                    <div class="prayer-item" id="prayer-${prayer}">
+                        <span class="prayer-name">${prayerNames[prayer]}</span>
+                        <span class="prayer-time">${time}</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            document.getElementById('next-prayer-info').style.display = 'block';
+        }
+
+        // التحقق من الصلاة القادمة
+        function checkUpcomingPrayer() {
+            if (!prayerTimes) return;
+            
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            let nextPrayer = null;
+            let minDiff = Infinity;
+            
+            prayers.forEach(prayer => {
+                const [hours, minutes] = prayerTimes[prayer].split(':').map(Number);
+                const prayerTime = hours * 60 + minutes;
+                
+                let diff = prayerTime - currentTime;
+                if (diff < 0) diff += 24 * 60; // اليوم التالي
+                
+                if (diff < minDiff && diff > 0) {
+                    minDiff = diff;
+                    nextPrayer = prayer;
+                }
+            });
+            
+            if (nextPrayer) {
+                // حفظ البيانات للاستخدام في وضع التركيز
+                nextPrayerData = {
+                    name: prayerNames[nextPrayer],
+                    time: prayerTimes[nextPrayer],
+                    minutesLeft: minDiff
+                };
+                
+                // تحديث العرض العادي
+                document.getElementById('next-prayer-name').innerText = nextPrayerData.name;
+                document.getElementById('next-prayer-time').innerText = nextPrayerData.time;
+                
+                // حساب الوقت المتبقي
+                const hours = Math.floor(minDiff / 60);
+                const minutes = minDiff % 60;
+                let timeText = '';
+                if (hours > 0) timeText += `${hours} ساعة و `;
+                timeText += `${minutes} دقيقة`;
+                const timeString = `بعد ${timeText}`;
+                
+                document.getElementById('time-until-prayer').innerText = timeString;
+                
+                // تحديث وضع التركيز
+                document.getElementById('focus-next-prayer-name').innerText = nextPrayerData.name;
+                document.getElementById('focus-next-prayer-time').innerText = nextPrayerData.time;
+                document.getElementById('focus-time-until').innerText = timeString;
+                
+                // تفعيل الصلاة الحالية
+                prayers.forEach(p => {
+                    const el = document.getElementById(`prayer-${p}`);
+                    if (el) el.classList.remove('active');
+                });
+                const activeEl = document.getElementById(`prayer-${nextPrayer}`);
+                if (activeEl) activeEl.classList.add('active');
+                
+                // التنبيه قبل 30 دقيقة
+                if (minDiff <= 30 && minDiff > 29) {
+                    const notificationKey = `${nextPrayer}-${new Date().toDateString()}`;
+                    if (lastNotificationTime !== notificationKey) {
+                        lastNotificationTime = notificationKey;
+                        showPrayerNotification(prayerNames[nextPrayer], minDiff);
+                    }
+                }
+                
+                // التنبيه عند دخول الوقت
+                if (minDiff <= 1 && minDiff > 0) {
+                    const notificationKey = `${nextPrayer}-now-${new Date().toDateString()}`;
+                    if (lastNotificationTime !== notificationKey) {
+                        lastNotificationTime = notificationKey;
+                        playSound('snd_bell');
+                        showPrayerNotification(prayerNames[nextPrayer], 0);
+                    }
+                }
+            }
+        }
+
+        // عرض تنبيه الصلاة
+        function showPrayerNotification(prayerName, minutesLeft) {
+            playSound('snd_gentle');
+            
+            if (minutesLeft > 0) {
+                // قبل الصلاة
+                if (Notification.permission === 'granted') {
+                    new Notification('🕌 تنبيه الصلاة', {
+                        body: `صلاة ${prayerName} بعد ${minutesLeft} دقيقة`,
+                        icon: '🕌'
+                    });
+                }
+                alert(`🕌 تنبيه: صلاة ${prayerName} بعد ${minutesLeft} دقيقة`);
+            } else {
+                // دخل وقت الصلاة
+                if (Notification.permission === 'granted') {
+                    new Notification('🕌 حان وقت الصلاة', {
+                        body: `حان الآن موعد صلاة ${prayerName}`,
+                        icon: '🕌'
+                    });
+                }
+                alert(`🕌 حان الآن موعد صلاة ${prayerName}`);
+            }
+        }
+
+        // تحديث أوقات الصلاة
+        function refreshPrayerTimes() {
+            const savedCity = localStorage.getItem('selectedCity');
+            if (savedCity) {
+                document.getElementById('city-select').value = savedCity;
+                getPrayerTimesByCity();
+            } else {
+                getPrayerTimes();
+            }
+        }
+
+        // طلب إذن الإشعارات
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        // --- نظام الإحصائيات والحفظ ---
+        let stats = {
+            today: { date: '', cycles: 0, focusTime: 0 },
+            week: { cycles: 0, focusTime: 0 },
+            streak: 0,
+            lastUsedDate: ''
+        };
+
+        // تحميل الإحصائيات من localStorage
+        function loadStats() {
+            const saved = localStorage.getItem('focusTimerStats');
+            if (saved) {
+                stats = JSON.parse(saved);
+                
+                // التحقق من التاريخ
+                const today = new Date().toDateString();
+                if (stats.today.date !== today) {
+                    // يوم جديد
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    
+                    if (stats.lastUsedDate === yesterday.toDateString()) {
+                        // استمرار السلسلة
+                        stats.streak++;
+                    } else if (stats.lastUsedDate !== today) {
+                        // انقطعت السلسلة
+                        stats.streak = 0;
+                    }
+                    
+                    // تحديث إحصائيات الأسبوع
+                    const weekStart = new Date();
+                    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+                    const lastWeekStart = new Date(stats.today.date);
+                    lastWeekStart.setDate(lastWeekStart.getDate() - lastWeekStart.getDay());
+                    
+                    if (weekStart.toDateString() !== lastWeekStart.toDateString()) {
+                        // أسبوع جديد
+                        stats.week = { cycles: 0, focusTime: 0 };
+                    }
+                    
+                    // إعادة تعيين إحصائيات اليوم
+                    stats.today = { date: today, cycles: 0, focusTime: 0 };
+                }
+            } else {
+                stats.today.date = new Date().toDateString();
+            }
+            
+            updateStatsDisplay();
+        }
+
+        // حفظ الإحصائيات
+        function saveStats() {
+            stats.lastUsedDate = new Date().toDateString();
+            localStorage.setItem('focusTimerStats', JSON.stringify(stats));
+            updateStatsDisplay();
+        }
+
+        // تحديث عرض الإحصائيات
+        function updateStatsDisplay() {
+            document.getElementById('today-cycles').innerText = stats.today.cycles;
+            document.getElementById('today-time').innerText = stats.today.focusTime;
+            document.getElementById('week-cycles').innerText = stats.week.cycles;
+            document.getElementById('week-time').innerText = stats.week.focusTime;
+            document.getElementById('streak-days').innerText = stats.streak;
+        }
+
+        // إضافة دورة مكتملة
+        function addCompletedCycle(focusMinutes) {
+            stats.today.cycles++;
+            stats.today.focusTime += focusMinutes;
+            stats.week.cycles++;
+            stats.week.focusTime += focusMinutes;
+            saveStats();
+        }
+
+        // إعادة تعيين الإحصائيات
+        function resetStats() {
+            if (confirm('هل أنت متأكد من إعادة تعيين جميع الإحصائيات؟')) {
+                stats = {
+                    today: { date: new Date().toDateString(), cycles: 0, focusTime: 0 },
+                    week: { cycles: 0, focusTime: 0 },
+                    streak: 0,
+                    lastUsedDate: ''
+                };
+                saveStats();
+                alert('تم إعادة تعيين الإحصائيات! 🔄');
+            }
+        }
+
+        // مشاركة الإنجاز
+        function shareAchievement() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+            
+            // الخلفية
+            const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 800, 600);
+            
+            // العنوان
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 48px Cairo, Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎯 إنجازي اليوم', 400, 100);
+            
+            // الإحصائيات
+            ctx.font = 'bold 72px Cairo, Arial';
+            ctx.fillText(`${stats.today.cycles}`, 400, 220);
+            ctx.font = '32px Cairo, Arial';
+            ctx.fillText('دورات مكتملة', 400, 270);
+            
+            ctx.font = 'bold 72px Cairo, Arial';
+            ctx.fillText(`${stats.today.focusTime}`, 400, 380);
+            ctx.font = '32px Cairo, Arial';
+            ctx.fillText('دقيقة تركيز', 400, 430);
+            
+            // السلسلة
+            if (stats.streak > 0) {
+                ctx.font = 'bold 48px Cairo, Arial';
+                ctx.fillText(`🔥 ${stats.streak} يوم متتالي`, 400, 520);
+            }
+            
+            // تحويل لصورة وتنزيلها
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `my-focus-achievement-${new Date().toLocaleDateString('ar-EG')}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+                alert('تم تحميل صورة الإنجاز! 🎉');
+            });
+        }
+
+        // تحميل الإعدادات
+        function loadSettings() {
+            const saved = localStorage.getItem('focusTimerSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                document.getElementById('p_focus').value = settings.focusTime || 25;
+                document.getElementById('p_short').value = settings.shortBreak || 5;
+                document.getElementById('p_long').value = settings.longBreak || 15;
+                document.getElementById('p_cycles').value = settings.cycles || 4;
+                document.getElementById('p_auto').checked = settings.autoStart !== false;
+            }
+        }
+
+        // حفظ الإعدادات
+        function saveSettings() {
+            const settings = {
+                focusTime: parseInt(document.getElementById('p_focus').value),
+                shortBreak: parseInt(document.getElementById('p_short').value),
+                longBreak: parseInt(document.getElementById('p_long').value),
+                cycles: parseInt(document.getElementById('p_cycles').value),
+                autoStart: document.getElementById('p_auto').checked
+            };
+            localStorage.setItem('focusTimerSettings', JSON.stringify(settings));
+        }
+
         // --- نظام الأصوات باستخدام Web Audio API ---
         let audioContext;
         let rainNoiseNode, thunderNoiseNode, windNoiseNode;
@@ -868,12 +1518,17 @@
 
         // --- التبويبات ---
         function switchTab(tab) {
-            ['pomo', 'timer', 'tasks'].forEach(t => {
+            ['pomo', 'timer', 'tasks', 'stats'].forEach(t => {
                 document.getElementById(t + '-view').classList.add('hidden');
                 document.getElementById('btn-' + t).classList.remove('active');
             });
             document.getElementById(tab + '-view').classList.remove('hidden');
             document.getElementById('btn-' + tab).classList.add('active');
+            
+            // تحديث الإحصائيات عند فتح التبويب
+            if (tab === 'stats') {
+                updateStatsDisplay();
+            }
         }
 
         // --- إصلاح Checkbox ---
@@ -883,7 +1538,7 @@
         }
 
         // --- منطق البومودورو ---
-        let pTimer, pTimeLeft, pIsFocus = true, pCurrentCycle = 1, pIsPaused = false;
+        let pTimer, pTimeLeft, pIsFocus = true, pCurrentCycle = 1, pIsPaused = false, pTotalCycles = 4;
         
         function startPomo() {
             const focusMin = parseInt(document.getElementById('p_focus').value);
@@ -895,27 +1550,46 @@
                 return;
             }
             
+            // حفظ الإعدادات
+            saveSettings();
+            
             document.getElementById('pomo-setup').classList.add('hidden');
             document.getElementById('pomo-running').classList.remove('hidden');
             pCurrentCycle = 1;
             pIsFocus = true;
+            pTotalCycles = cycles;
             runPomoSession();
         }
 
         function runPomoSession() {
             const focusMin = parseInt(document.getElementById('p_focus').value);
-            const breakMin = parseInt(document.getElementById('p_short').value);
+            const shortBreakMin = parseInt(document.getElementById('p_short').value);
+            const longBreakMin = parseInt(document.getElementById('p_long').value);
+            const totalCycles = parseInt(document.getElementById('p_cycles').value);
             
-            pTimeLeft = (pIsFocus ? focusMin : breakMin) * 60;
+            // تحديد نوع الراحة (قصيرة أو طويلة)
+            let breakTime = shortBreakMin;
+            if (pCurrentCycle === totalCycles && !pIsFocus) {
+                // راحة طويلة بعد آخر دورة
+                breakTime = longBreakMin;
+            }
             
-            document.getElementById('p_status_text').innerText = pIsFocus ? "🎯 وقت التركيز" : "☕ وقت الراحة";
-            document.getElementById('cycle_display').innerText = `${pCurrentCycle}/${document.getElementById('p_cycles').value}`;
+            pTimeLeft = (pIsFocus ? focusMin : breakTime) * 60;
+            
+            // تحديث النص
+            let statusText = "🎯 وقت التركيز";
+            if (!pIsFocus) {
+                statusText = pCurrentCycle === totalCycles ? "😌 راحة طويلة" : "☕ راحة قصيرة";
+            }
+            
+            document.getElementById('p_status_text').innerText = statusText;
+            document.getElementById('cycle_display').innerText = `دورة: ${pCurrentCycle}/${totalCycles}`;
             
             // 🔊 تشغيل الصوت المناسب
             if (pIsFocus) {
-                playSound('snd_gentle'); // صوت لطيف عند بداية العمل
+                playSound('snd_gentle');
             } else {
-                playSound('snd_bell'); // جرس مدرسة عند بداية الراحة
+                playSound('snd_bell');
             }
 
             clearInterval(pTimer);
@@ -941,7 +1615,10 @@
 
         function handlePomoEnd() {
             if (pIsFocus) {
-                // 🔊 انتهى وقت العمل -> تشغيل جرس المدرسة
+                // 🔊 انتهى وقت العمل -> إضافة للإحصائيات
+                const focusMin = parseInt(document.getElementById('p_focus').value);
+                addCompletedCycle(focusMin);
+                
                 playSound('snd_bell');
                 pIsFocus = false;
                 if (document.getElementById('p_auto').checked) {
@@ -962,7 +1639,7 @@
                     // 🔊 انتهت الجلسة بالكامل
                     playSound('snd_bell');
                     setTimeout(() => {
-                        alert("🎉 انتهت الجلسة بالكامل! أحسنت!");
+                        alert("🎉 انتهت الجلسة بالكامل! أحسنت!\n\n✨ تم إضافة " + totalCycles + " دورات إلى إحصائياتك!");
                         resetPomo();
                     }, 500);
                 }
@@ -977,9 +1654,15 @@
             document.getElementById('p_timer_display').innerText = timeStr;
             
             // تحديث عرض وضع التركيز
+            const totalCycles = parseInt(document.getElementById('p_cycles').value);
+            let statusLabel = "🎯 وقت التركيز";
+            if (!pIsFocus) {
+                statusLabel = pCurrentCycle === totalCycles ? "😌 راحة طويلة" : "☕ راحة قصيرة";
+            }
+            
             document.getElementById('focus-timer-text').innerText = timeStr;
-            document.getElementById('focus-timer-label').innerText = pIsFocus ? "🎯 وقت التركيز" : "☕ وقت الراحة";
-            document.getElementById('focus-timer-cycle').innerText = `دورة: ${pCurrentCycle}/${document.getElementById('p_cycles').value}`;
+            document.getElementById('focus-timer-label').innerText = statusLabel;
+            document.getElementById('focus-timer-cycle').innerText = `دورة: ${pCurrentCycle}/${totalCycles}`;
         }
 
         function togglePausePomo() {
@@ -1074,6 +1757,20 @@
 
         // إضافة مهمة بالضغط على Enter
         document.addEventListener('DOMContentLoaded', function() {
+            // تحميل الإحصائيات والإعدادات
+            loadStats();
+            loadSettings();
+            
+            // طلب إذن الإشعارات
+            requestNotificationPermission();
+            
+            // تحميل أوقات الصلاة إذا كانت المدينة محفوظة
+            const savedCity = localStorage.getItem('selectedCity');
+            if (savedCity) {
+                document.getElementById('city-select').value = savedCity;
+                getPrayerTimesByCity();
+            }
+            
             const taskInput = document.getElementById('task-input');
             if (taskInput) {
                 taskInput.addEventListener('keypress', function(e) {
