@@ -745,6 +745,18 @@
                     </div>
                     <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVolume('wind', this.value)">
                 </div>
+
+                <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+                
+                <div style="color:#aaa; margin-bottom:15px; font-weight:bold;">📻 إذاعة القرآن الكريم</div>
+                
+                <div class="sound-item">
+                    <div class="sound-header-row">
+                        <div class="sound-label">🕌 إذاعة القرآن - القاهرة</div>
+                        <button class="play-btn" id="btn-quran" onclick="toggleQuranRadio()">▶</button>
+                    </div>
+                    <input type="range" min="0" max="1" step="0.1" value="0.7" oninput="setQuranVolume(this.value)">
+                </div>
             </div>
 
             <div class="card" style="margin-top:15px; font-size:0.9rem; color:#ccc; line-height:1.6;">
@@ -884,6 +896,53 @@
 
 
     <script>
+        // --- إذاعة القرآن الكريم ---
+        let quranRadio = null;
+        let quranPlaying = false;
+
+        function toggleQuranRadio() {
+            const btn = document.getElementById('btn-quran');
+            
+            if (!quranPlaying) {
+                // تشغيل الإذاعة
+                if (!quranRadio) {
+                    quranRadio = new Audio('https://n0c.radiojar.com/8s5u5tpdtwzuv?rj-ttl=5&rj-tok=AAABm57nFpkAHR1sjOtZixFuqQ');
+                    quranRadio.volume = 0.7;
+                }
+                
+                quranRadio.play().then(() => {
+                    quranPlaying = true;
+                    btn.innerHTML = "⏸";
+                    btn.classList.add('playing');
+                }).catch(error => {
+                    console.error('Error playing Quran radio:', error);
+                    // محاولة بديلة بالرابط الأول
+                    quranRadio.src = 'https://stream.radiojar.com/8s5u5tpdtwzuv';
+                    quranRadio.play().then(() => {
+                        quranPlaying = true;
+                        btn.innerHTML = "⏸";
+                        btn.classList.add('playing');
+                    }).catch(e => {
+                        alert('تعذر تشغيل الإذاعة. يرجى التحقق من الاتصال بالإنترنت.');
+                    });
+                });
+            } else {
+                // إيقاف الإذاعة
+                if (quranRadio) {
+                    quranRadio.pause();
+                    quranPlaying = false;
+                    btn.innerHTML = "▶";
+                    btn.classList.remove('playing');
+                }
+            }
+        }
+
+        function setQuranVolume(value) {
+            if (quranRadio) {
+                quranRadio.volume = parseFloat(value);
+            }
+        }
+
         // --- نظام أوقات الصلاة ---
         let prayerTimes = null;
         let prayerCheckInterval = null;
