@@ -4,23 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus Timer Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #3b6546;
-            --card-bg: #1f1f1f;
-            --input-bg: #2d2d2d;
-            --text-color: #ffffff;
-            --accent-color: #1db954;
-            --danger-color: #e74c3c;
-            --secondary-text: #a0a0a0;
+            color-scheme: dark;
+            --bg-color: #0e1a2b;
+            --bg-color-2: #16283f;
+            --card-bg: #182741;
+            --card-bg-soft: #1c2d4a;
+            --card-border: rgba(212,175,120,0.14);
+            --input-bg: #101d33;
+            --text-color: #f2ede2;
+            --accent-color: #d4a86a;
+            --accent-light: #e8c88f;
+            --accent-color-soft: rgba(212,168,106,0.15);
+            --teal-color: #3f8f83;
+            --danger-color: #c9564a;
+            --secondary-text: #8b96ab;
+            --gold-glow: rgba(212,168,106,0.35);
         }
 
         * { box-sizing: border-box; outline: none; }
 
+        ::selection { background: var(--accent-color); color: #1a1005; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(212,168,106,0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(212,168,106,0.5); }
+
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-color);
+            background:
+                radial-gradient(circle at 15% 8%, rgba(63,143,131,0.16) 0%, transparent 45%),
+                radial-gradient(circle at 85% 92%, rgba(212,168,106,0.10) 0%, transparent 50%),
+                linear-gradient(180deg, var(--bg-color) 0%, var(--bg-color-2) 100%);
+            background-attachment: fixed;
             color: var(--text-color);
             margin: 0;
             padding: 20px;
@@ -80,30 +99,38 @@
         /* --- الساعة --- */
         .clock-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             width: 100%;
         }
         .big-clock {
             font-size: 5rem;
             font-weight: 700;
-            font-family: 'Segoe UI', sans-serif;
-            letter-spacing: 2px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-family: 'Amiri', serif;
+            letter-spacing: 1px;
+            background: linear-gradient(180deg, var(--accent-light) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 8px 30px rgba(212,168,106,0.25);
         }
         .date-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 5px 15px;
-            border-radius: 15px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--card-border);
+            padding: 6px 18px;
+            border-radius: 20px;
             display: inline-block;
-            font-size: 0.9rem;
-            margin-top: 10px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            color: var(--secondary-text);
+            margin-top: 12px;
         }
 
         /* --- القائمة --- */
         .nav-pill {
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--card-border);
             padding: 5px;
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             gap: 5px;
             margin-bottom: 30px;
@@ -111,21 +138,22 @@
         .nav-pill button {
             background: transparent;
             border: none;
-            color: #ccc;
-            padding: 8px 20px;
-            border-radius: 8px;
+            color: var(--secondary-text);
+            padding: 8px 22px;
+            border-radius: 10px;
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
             font-weight: 600;
-            transition: 0.3s;
+            transition: 0.25s;
         }
         .nav-pill button:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.06);
+            color: var(--text-color);
         }
         .nav-pill button.active {
             background: var(--accent-color);
-            color: white;
-            box-shadow: 0 4px 10px rgba(29, 185, 84, 0.3);
+            color: #1a1005;
+            box-shadow: 0 4px 14px var(--gold-glow);
         }
 
         /* --- التخطيط --- */
@@ -140,75 +168,126 @@
 
         .card {
             background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
-            padding: 20px;
+            padding: 22px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         /* --- كارت الأصوات --- */
+        .card > div[style*="font-weight:bold"] {
+            font-size: 0.8rem !important;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            color: var(--accent-color) !important;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+        }
         .sound-item {
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid transparent;
+            padding: 12px;
             border-radius: 12px;
             margin-bottom: 10px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transition: 0.25s;
+        }
+        .sound-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--card-border);
         }
         .sound-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
         .sound-label { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
         
         /* زر تشغيل الصوت */
         .play-btn {
-            background: transparent;
-            border: 1px solid #555;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid #4a5468;
             color: #aaa;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: 0.2s;
+            flex-shrink: 0;
         }
         .play-btn:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(212,168,106,0.12);
+            border-color: var(--accent-color);
+            color: var(--accent-light);
         }
         .play-btn.playing {
             background: var(--accent-color);
-            color: white;
+            color: #1a1005;
             border-color: var(--accent-color);
-            box-shadow: 0 0 10px var(--accent-color);
+            box-shadow: 0 0 14px var(--gold-glow);
         }
+
+        select {
+            color-scheme: dark;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid #3a4560;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            min-width: 0;
+            max-width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            background-image: linear-gradient(45deg, transparent 50%, var(--accent-color) 50%), linear-gradient(135deg, var(--accent-color) 50%, transparent 50%);
+            background-position: calc(16px + 5px) calc(1.1em), 16px calc(1.1em);
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+            padding-right: 30px;
+        }
+        select:hover, select:focus {
+            border-color: var(--accent-color);
+        }
+        select option { background: var(--input-bg); color: var(--text-color); }
 
         input[type="range"] {
             width: 100%;
             height: 4px;
-            background: #444;
+            background: #3a4560;
             border-radius: 2px;
             -webkit-appearance: none;
             cursor: pointer;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
+            width: 13px;
+            height: 13px;
             background: var(--accent-color);
             border-radius: 50%;
             cursor: pointer;
+            box-shadow: 0 0 8px var(--gold-glow);
         }
         input[type="range"]::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
+            width: 13px;
+            height: 13px;
             background: var(--accent-color);
             border-radius: 50%;
             cursor: pointer;
             border: none;
+            box-shadow: 0 0 8px var(--gold-glow);
         }
 
         /* --- كارت الإعدادات --- */
@@ -221,22 +300,27 @@
         }
         .input-box {
             background: var(--input-bg);
+            border: 1px solid var(--card-border);
             padding: 15px;
             border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
+            transition: 0.25s;
+        }
+        .input-box:hover {
+            border-color: var(--accent-color);
         }
         .input-box label {
             font-size: 0.85rem;
-            color: #aaa;
+            color: var(--secondary-text);
         }
         .input-box input[type="number"] {
             background: transparent;
             border: none;
-            color: white;
-            font-size: 1.5rem;
+            color: var(--accent-light);
+            font-size: 1.6rem;
             font-weight: bold;
             text-align: center;
             width: 100%;
@@ -246,13 +330,14 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            accent-color: var(--accent-color);
         }
         
         .btn-action {
             width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 1.2rem;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1.15rem;
             font-weight: bold;
             border: none;
             cursor: pointer;
@@ -261,21 +346,24 @@
             align-items: center;
             gap: 10px;
             font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
+            transition: 0.25s;
         }
         .btn-action:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
         }
-        .btn-action.start { background: var(--accent-color); color: white; }
+        .btn-action.start { background: linear-gradient(135deg, var(--accent-light), var(--accent-color)); color: #1a1005; }
         .btn-action.pause { background: #f1c40f; color: #1e1e1e; }
         
         .timer-running {
             font-size: 6rem;
-            color: var(--accent-color);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Amiri', serif;
             margin: 20px 0;
             font-weight: bold;
+            background: linear-gradient(180deg, var(--accent-light), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         /* --- وضع التركيز --- */
@@ -448,11 +536,11 @@
             width: 50px;
             cursor: pointer;
             font-size: 1.2rem;
-            color: white;
-            transition: 0.3s;
+            color: #1a1005;
+            transition: 0.25s;
         }
         .task-add-btn:hover {
-            background: #17a042;
+            background: var(--accent-light);
         }
 
         .task-item {
@@ -538,8 +626,8 @@
         }
         
         .prayer-item.active {
-            background: rgba(29, 185, 84, 0.2);
-            border: 1px solid rgba(29, 185, 84, 0.4);
+            background: var(--accent-color-soft);
+            border: 1px solid rgba(212,168,106,0.4);
         }
         
         .prayer-name {
@@ -627,6 +715,58 @@
                 font-size: 0.75rem;
             }
         }
+        /* --- الثيم القديم (أخضر) --- */
+        body.old-theme {
+            --bg-color: #3b6546;
+            --bg-color-2: #3b6546;
+            --card-bg: #181818;
+            --card-bg-soft: #202020;
+            --card-border: rgba(255,255,255,0.08);
+            --input-bg: #202020;
+            --accent-color: #27ae60;
+            --accent-light: #2ecc71;
+            --accent-color-soft: rgba(39,174,96,0.2);
+            --gold-glow: rgba(39,174,96,0.4);
+        }
+        body.old-theme {
+            background: #3b6546;
+        }
+        body.old-theme .btn-action.start,
+        body.old-theme .nav-pill button.active,
+        body.old-theme .task-add-btn {
+            color: #ffffff;
+        }
+        body.old-theme .big-clock,
+        body.old-theme .timer-running {
+            font-family: 'Segoe UI', sans-serif;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #ffffff;
+            text-shadow: none;
+        }
+        body.old-theme .date-badge {
+            background: rgba(0,0,0,0.2);
+            color: #e8e8e8;
+        }
+        body.old-theme .nav-pill {
+            background: rgba(0,0,0,0.25);
+        }
+
+        .theme-toggle-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+        .theme-toggle-btn:hover { background: rgba(255,255,255,0.25); }
     </style>
 </head>
 <body>
@@ -635,6 +775,7 @@
 
     <div class="header-controls">
         <button class="focus-btn" onclick="toggleFocusMode()">✨ وضع التركيز</button>
+        <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleOldTheme()">🎨 التصميم القديم</button>
     </div>
 
     <div class="clock-container">
@@ -672,7 +813,7 @@
                 
                 <!-- اختيار المدينة -->
                 <div style="margin-bottom: 15px;">
-                    <select id="city-select" onchange="getPrayerTimesByCity()" style="width: 100%; padding: 10px; border-radius: 8px; background: var(--input-bg); color: white; border: 1px solid #444; font-family: 'Cairo', sans-serif;">
+                    <select id="city-select" onchange="getPrayerTimesByCity()" style="width: 100%; padding: 10px;">
                         <option value="">اختر المدينة</option>
                         <option value="Cairo">القاهرة</option>
                         <option value="Alexandria">الإسكندرية</option>
@@ -737,11 +878,38 @@
                 <div style="color:#aaa; margin-bottom:15px; font-weight:bold;">📻 إذاعة القرآن الكريم</div>
                 
                 <div class="sound-item">
-                    <div class="sound-header-row">
-                        <div class="sound-label">🕌 إذاعة القرآن - القاهرة</div>
-                        <button class="play-btn" id="btn-quran" onclick="toggleQuranRadio()">▶</button>
+                    <div class="sound-header-row" style="width:100%;">
+                        <select id="quran-radio-select" onchange="changeQuranStation()" style="flex:1;">
+                            <option value="https://stream.radiojar.com/8s5u5tpdtwzuv">🕌 إذاعة القرآن الكريم - القاهرة</option>
+                            <option value="https://stream.radiojar.com/0tpy1h0kxtzuv">🇸🇦 إذاعة القرآن الكريم - السعودية</option>
+                            <option value="https://backup.qurango.net/radio/tarateel">🎙️ تلاوات مختارة</option>
+                            <option value="https://backup.qurango.net/radio/abdulrahman_alsudaes">🕋 الشيخ عبدالرحمن السديس (إمام الحرم المكي)</option>
+                            <option value="https://backup.qurango.net/radio/ali_alhuthaifi">🕌 الشيخ علي الحذيفي (إمام الحرم المدني)</option>
+                        </select>
+                        <button class="play-btn" id="btn-quran" onclick="toggleQuranRadio()" style="flex-shrink:0;">▶</button>
                     </div>
                     <input type="range" min="0" max="1" step="0.1" value="0.7" oninput="setQuranVolume(this.value)">
+                    <div id="quran-radio-status" style="font-size:0.75rem; color:#888; text-align:center;"></div>
+                </div>
+
+                <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+                <div style="color:#aaa; margin-bottom:15px; font-weight:bold;">📖 تشغيل سورة محددة</div>
+
+                <div class="sound-item">
+                    <select id="quran-reciter-select" style="width:100%; margin-bottom:8px;">
+                        <option value="">جاري تحميل القراء...</option>
+                    </select>
+                    <select id="quran-surah-select" style="width:100%;">
+                        <!-- تتملى بجافاسكريبت -->
+                    </select>
+                    <div class="sound-header-row" style="margin-top:8px;">
+                        <div class="sound-label" id="surah-now-playing" style="font-size:0.8rem; color:#999;">اختر قارئ وسورة</div>
+                        <button class="play-btn" id="btn-surah" onclick="toggleSurahPlayback()">▶</button>
+                    </div>
+                    <input type="range" min="0" max="1" step="0.1" value="0.7" oninput="setSurahVolume(this.value)">
+                    <div id="surah-progress-row" style="display:none; font-size:0.75rem; color:#888; text-align:center;">
+                        <span id="surah-current-time">0:00</span> / <span id="surah-duration">0:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -882,50 +1050,216 @@
 
 
     <script>
-        // --- إذاعة القرآن الكريم ---
+        // --- تبديل الثيم (قديم أخضر / جديد ذهبي) ---
+        function toggleOldTheme() {
+            const btn = document.getElementById('theme-toggle-btn');
+            const isOld = document.body.classList.toggle('old-theme');
+            btn.innerHTML = isOld ? "🎨 التصميم الجديد" : "🎨 التصميم القديم";
+            localStorage.setItem('focusTimerTheme', isOld ? 'old' : 'new');
+        }
+
+        (function initTheme() {
+            const saved = localStorage.getItem('focusTimerTheme');
+            if (saved === 'old') {
+                document.body.classList.add('old-theme');
+                document.addEventListener('DOMContentLoaded', () => {
+                    const btn = document.getElementById('theme-toggle-btn');
+                    if (btn) btn.innerHTML = "🎨 التصميم الجديد";
+                });
+            }
+        })();
+
+        // --- إذاعة القرآن الكريم (Streaming - محطات متعددة) ---
         let quranRadio = null;
         let quranPlaying = false;
 
         function toggleQuranRadio() {
             const btn = document.getElementById('btn-quran');
-            
+            const statusEl = document.getElementById('quran-radio-status');
+            const url = document.getElementById('quran-radio-select').value;
+
             if (!quranPlaying) {
-                // تشغيل الإذاعة
                 if (!quranRadio) {
-                    quranRadio = new Audio('https://n0c.radiojar.com/8s5u5tpdtwzuv?rj-ttl=5&rj-tok=AAABm57nFpkAHR1sjOtZixFuqQ');
-                    quranRadio.volume = 0.7;
+                    quranRadio = new Audio(url);
+                    quranRadio.volume = document.querySelector('#quran-radio-select').closest('.sound-item').querySelector('input[type="range"]').value || 0.7;
                 }
-                
+
+                statusEl.innerText = "⏳ جاري الاتصال بالإذاعة...";
+
                 quranRadio.play().then(() => {
                     quranPlaying = true;
                     btn.innerHTML = "⏸";
                     btn.classList.add('playing');
+                    statusEl.innerText = "🔴 بث مباشر الآن";
+                    // إيقاف تشغيل السورة المحددة لو شغالة عشان ميحصلش تداخل صوت
+                    if (surahPlaying) toggleSurahPlayback();
                 }).catch(error => {
                     console.error('Error playing Quran radio:', error);
-                    // محاولة بديلة بالرابط الأول
-                    quranRadio.src = 'https://stream.radiojar.com/8s5u5tpdtwzuv';
-                    quranRadio.play().then(() => {
-                        quranPlaying = true;
-                        btn.innerHTML = "⏸";
-                        btn.classList.add('playing');
-                    }).catch(e => {
-                        alert('تعذر تشغيل الإذاعة. يرجى التحقق من الاتصال بالإنترنت.');
-                    });
+                    statusEl.innerText = "⚠️ تعذر الاتصال، جرّب محطة تانية";
                 });
             } else {
-                // إيقاف الإذاعة
                 if (quranRadio) {
                     quranRadio.pause();
                     quranPlaying = false;
                     btn.innerHTML = "▶";
                     btn.classList.remove('playing');
+                    statusEl.innerText = "";
                 }
+            }
+        }
+
+        function changeQuranStation() {
+            const wasPlaying = quranPlaying;
+            const url = document.getElementById('quran-radio-select').value;
+            const btn = document.getElementById('btn-quran');
+            const statusEl = document.getElementById('quran-radio-status');
+
+            if (quranRadio) {
+                quranRadio.pause();
+            }
+            quranRadio = new Audio(url);
+            quranRadio.volume = 0.7;
+            quranPlaying = false;
+            btn.innerHTML = "▶";
+            btn.classList.remove('playing');
+            statusEl.innerText = "";
+
+            if (wasPlaying) {
+                toggleQuranRadio();
             }
         }
 
         function setQuranVolume(value) {
             if (quranRadio) {
                 quranRadio.volume = parseFloat(value);
+            }
+        }
+
+        // --- تشغيل سورة محددة أونلاين (mp3quran.net API) ---
+        let surahAudio = null;
+        let surahPlaying = false;
+        let reciterList = [];
+
+        const surahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+        "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+        "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+        "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+        "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+        "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+        "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+        "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+        "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+        "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+        "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+        "المسد","الإخلاص","الفلق","الناس"];
+
+        async function loadReciters() {
+            const reciterSelect = document.getElementById('quran-reciter-select');
+            try {
+                const res = await fetch('https://mp3quran.net/api/v3/reciters?language=ar&rewaya=1');
+                const data = await res.json();
+                reciterList = data.reciters || [];
+                reciterSelect.innerHTML = '';
+                reciterList.forEach((r, idx) => {
+                    const moshaf = r.moshaf && r.moshaf[0];
+                    if (!moshaf) return;
+                    const opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.innerText = r.name;
+                    reciterSelect.appendChild(opt);
+                });
+                populateSurahSelect();
+            } catch (e) {
+                console.error('Error loading reciters:', e);
+                reciterSelect.innerHTML = '<option value="">تعذر تحميل القراء</option>';
+            }
+        }
+
+        function populateSurahSelect() {
+            const surahSelect = document.getElementById('quran-surah-select');
+            surahSelect.innerHTML = '';
+            surahNames.forEach((name, i) => {
+                const opt = document.createElement('option');
+                opt.value = i + 1;
+                opt.innerText = `${i + 1}. ${name}`;
+                surahSelect.appendChild(opt);
+            });
+        }
+
+        function buildSurahUrl() {
+            const reciterIdx = document.getElementById('quran-reciter-select').value;
+            const surahNum = parseInt(document.getElementById('quran-surah-select').value);
+            const reciter = reciterList[reciterIdx];
+            if (!reciter || !reciter.moshaf || !reciter.moshaf[0]) return null;
+            const server = reciter.moshaf[0].server;
+            const paddedSurah = String(surahNum).padStart(3, '0');
+            return `${server}${paddedSurah}.mp3`;
+        }
+
+        function toggleSurahPlayback() {
+            const btn = document.getElementById('btn-surah');
+            const nowPlayingEl = document.getElementById('surah-now-playing');
+            const progressRow = document.getElementById('surah-progress-row');
+
+            if (!surahPlaying) {
+                const url = buildSurahUrl();
+                if (!url) {
+                    alert('يرجى اختيار القارئ والسورة أولاً');
+                    return;
+                }
+
+                if (quranPlaying) toggleQuranRadio(); // وقف الإذاعة عشان ميحصلش تداخل
+
+                if (!surahAudio) surahAudio = new Audio();
+                surahAudio.src = url;
+                surahAudio.volume = 0.7;
+
+                nowPlayingEl.innerText = "⏳ جاري التحميل...";
+
+                surahAudio.play().then(() => {
+                    surahPlaying = true;
+                    btn.innerHTML = "⏸";
+                    btn.classList.add('playing');
+                    progressRow.style.display = 'block';
+                    const reciterName = document.getElementById('quran-reciter-select').selectedOptions[0].innerText;
+                    const surahName = document.getElementById('quran-surah-select').selectedOptions[0].innerText;
+                    nowPlayingEl.innerText = `▶ ${surahName} - ${reciterName}`;
+                }).catch(e => {
+                    console.error('Error playing surah:', e);
+                    nowPlayingEl.innerText = "⚠️ تعذر تشغيل السورة، جرّب قارئ آخر";
+                });
+
+                surahAudio.ontimeupdate = updateSurahProgress;
+                surahAudio.onended = () => {
+                    surahPlaying = false;
+                    btn.innerHTML = "▶";
+                    btn.classList.remove('playing');
+                };
+            } else {
+                surahAudio.pause();
+                surahPlaying = false;
+                btn.innerHTML = "▶";
+                btn.classList.remove('playing');
+            }
+        }
+
+        function updateSurahProgress() {
+            if (!surahAudio) return;
+            const cur = document.getElementById('surah-current-time');
+            const dur = document.getElementById('surah-duration');
+            const fmt = (s) => {
+                if (isNaN(s)) return "0:00";
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60);
+                return `${m}:${sec < 10 ? '0' + sec : sec}`;
+            };
+            cur.innerText = fmt(surahAudio.currentTime);
+            dur.innerText = fmt(surahAudio.duration);
+        }
+
+        function setSurahVolume(value) {
+            if (surahAudio) {
+                surahAudio.volume = parseFloat(value);
             }
         }
 
@@ -1757,6 +2091,7 @@
                 athkarInterval = setInterval(showAthkar, 8000);
             } else {
                 clearInterval(athkarInterval);
+                document.getElementById('athkar-box').style.opacity = '';
             }
         }
 
@@ -1808,6 +2143,9 @@
             
             // طلب إذن الإشعارات
             requestNotificationPermission();
+
+            // تحميل قائمة القراء لتشغيل السور المحددة
+            loadReciters();
             
             // تحميل أوقات الصلاة إذا كانت المدينة محفوظة
             const savedCity = localStorage.getItem('selectedCity');
