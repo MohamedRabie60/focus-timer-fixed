@@ -290,6 +290,51 @@
             box-shadow: 0 0 8px var(--gold-glow);
         }
 
+        .sleep-timer-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+        }
+        .sleep-timer-row input[type="number"] {
+            background: var(--input-bg);
+            border: 1px solid #3a4560;
+            border-radius: 6px;
+            color: var(--text-color);
+            padding: 5px 8px;
+            font-size: 0.8rem;
+            font-family: 'Cairo', sans-serif;
+            width: 0;
+            text-align: center;
+        }
+        .sleep-timer-go-btn {
+            background: transparent;
+            border: 1px solid #4a5468;
+            color: var(--accent-light);
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .sleep-timer-go-btn:hover {
+            background: var(--accent-color-soft);
+        }
+        #sleep-timer-remaining {
+            font-size: 0.75rem;
+            color: var(--accent-light);
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
         /* --- كارت الإعدادات --- */
         .main-card { text-align: center; }
         .grid-inputs {
@@ -496,6 +541,98 @@
         
         body.focus-active .focus-prayer-display {
             display: block;
+        }
+
+        /* المشغل الصوتي العائم في وضع التركيز */
+        .focus-player-widget {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(20,30,45,0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px 16px;
+            align-items: center;
+            gap: 12px;
+            min-width: 240px;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            direction: rtl;
+            z-index: 500;
+        }
+        body.focus-active .focus-player-widget.visible {
+            display: flex;
+            animation: playerFadeIn 0.4s ease;
+        }
+        @keyframes playerFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .focus-player-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 6px var(--gold-glow));
+        }
+        .focus-player-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .focus-player-title {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+        .focus-player-seek-wrap { display: none; }
+        .focus-player-seek-wrap.active { display: block; }
+        .focus-player-seek-wrap input[type="range"] {
+            width: 100%;
+            height: 3px;
+            margin-bottom: 2px;
+        }
+        .focus-player-seek-wrap input[type="range"]::-webkit-slider-thumb {
+            width: 10px;
+            height: 10px;
+        }
+        .focus-player-times {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: var(--secondary-text);
+        }
+        .focus-player-btn {
+            background: var(--accent-color-soft);
+            border: 1px solid var(--card-border);
+            color: var(--accent-light);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .focus-player-btn:hover {
+            background: var(--accent-color);
+            color: #1a1005;
+        }
+
+        @media (max-width: 768px) {
+            .focus-player-widget {
+                top: auto;
+                bottom: 140px;
+                right: 50%;
+                transform: translateX(50%);
+                min-width: 220px;
+                max-width: 85vw;
+            }
         }
         
         #focus-prayer-content {
@@ -874,7 +1011,7 @@
 
 
                 <div style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
-                
+
                 <div style="color:#aaa; margin-bottom:15px; font-weight:bold;">📻 إذاعة القرآن الكريم</div>
                 
                 <div class="sound-item">
@@ -906,10 +1043,31 @@
                         <div class="sound-label" id="surah-now-playing" style="font-size:0.8rem; color:#999;">اختر قارئ وسورة</div>
                         <button class="play-btn" id="btn-surah" onclick="toggleSurahPlayback()">▶</button>
                     </div>
-                    <input type="range" min="0" max="1" step="0.1" value="0.7" oninput="setSurahVolume(this.value)">
-                    <div id="surah-progress-row" style="display:none; font-size:0.75rem; color:#888; text-align:center;">
-                        <span id="surah-current-time">0:00</span> / <span id="surah-duration">0:00</span>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <button id="btn-repeat-mode" onclick="toggleRepeatMode()" style="flex:1; background:transparent; border:1px solid #4a5468; color:#aaa; border-radius:8px; padding:6px; cursor:pointer; font-size:0.8rem; transition:0.2s;">🔁 تكرار السورة</button>
+                        <button id="btn-autonext-mode" onclick="toggleAutoNextMode()" style="flex:1; background:transparent; border:1px solid #4a5468; color:#aaa; border-radius:8px; padding:6px; cursor:pointer; font-size:0.8rem; transition:0.2s;">⏭ تشغيل تلقائي للتالية</button>
                     </div>
+                    <input type="range" min="0" max="1" step="0.1" value="0.7" oninput="setSurahVolume(this.value)">
+                    <div id="surah-progress-row" style="display:none;">
+                        <input type="range" id="surah-seek" min="0" max="100" value="0" step="0.1" oninput="seekSurah(this.value)" style="width:100%; margin-bottom:4px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#888;">
+                            <span id="surah-current-time">0:00</span>
+                            <div style="display:flex; gap:8px;">
+                                <button onclick="restartSurah()" title="البداية من أول السورة" style="background:transparent; border:1px solid #4a5468; color:var(--accent-light); border-radius:6px; padding:3px 8px; cursor:pointer; font-size:0.8rem;">⏮ من الأول</button>
+                                <button onclick="seekRelative(-10)" title="رجوع 10 ثواني" style="background:transparent; border:1px solid #4a5468; color:#aaa; border-radius:6px; padding:3px 8px; cursor:pointer; font-size:0.8rem;">⏪ 10</button>
+                                <button onclick="seekRelative(10)" title="تقديم 10 ثواني" style="background:transparent; border:1px solid #4a5468; color:#aaa; border-radius:6px; padding:3px 8px; cursor:pointer; font-size:0.8rem;">10 ⏩</button>
+                            </div>
+                            <span id="surah-duration">0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sleep-timer-row" id="sleep-timer-row">
+                    <span style="font-size:1rem;">😴</span>
+                    <input type="number" id="sleep-timer-input" min="1" max="300" placeholder="مؤقت النوم (دقيقة)" style="flex:1;">
+                    <button class="sleep-timer-go-btn" onclick="startSleepTimerFromInput()">تشغيل</button>
+                    <span id="sleep-timer-remaining" style="display:none;"></span>
+                    <button class="sleep-timer-go-btn" id="sleep-timer-cancel" onclick="cancelSleepTimer()" style="display:none; color: var(--danger-color); border-color: var(--danger-color);">✕</button>
                 </div>
             </div>
 
@@ -1047,6 +1205,22 @@
         <div id="focus-time-until" style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">بعد 9 ساعة و 53 دقيقة</div>
     </div>
 
+    <!-- المشغل الصوتي العائم في وضع التركيز -->
+    <div id="focus-player-widget" class="focus-player-widget">
+        <div class="focus-player-icon" id="focus-player-icon">🎧</div>
+        <div class="focus-player-info">
+            <div class="focus-player-title" id="focus-player-title">لا يوجد تشغيل</div>
+            <div class="focus-player-seek-wrap" id="focus-player-seek-wrap">
+                <input type="range" id="focus-player-seek" min="0" max="100" value="0" step="0.1" oninput="focusSeek(this.value)">
+                <div class="focus-player-times">
+                    <span id="focus-player-current">0:00</span>
+                    <span id="focus-player-duration">0:00</span>
+                </div>
+            </div>
+        </div>
+        <button class="focus-player-btn" id="focus-player-toggle" onclick="focusPlayerToggle()">⏸</button>
+    </div>
+
 
 
     <script>
@@ -1093,6 +1267,7 @@
                     statusEl.innerText = "🔴 بث مباشر الآن";
                     // إيقاف تشغيل السورة المحددة لو شغالة عشان ميحصلش تداخل صوت
                     if (surahPlaying) toggleSurahPlayback();
+                    updateFocusPlayerWidget();
                 }).catch(error => {
                     console.error('Error playing Quran radio:', error);
                     statusEl.innerText = "⚠️ تعذر الاتصال، جرّب محطة تانية";
@@ -1104,6 +1279,7 @@
                     btn.innerHTML = "▶";
                     btn.classList.remove('playing');
                     statusEl.innerText = "";
+                    updateFocusPlayerWidget();
                 }
             }
         }
@@ -1126,6 +1302,8 @@
 
             if (wasPlaying) {
                 toggleQuranRadio();
+            } else {
+                updateFocusPlayerWidget();
             }
         }
 
@@ -1135,10 +1313,73 @@
             }
         }
 
+        // --- مؤقت النوم (إيقاف تلقائي بعد مدة مخصصة) ---
+        let sleepTimerInterval = null;
+        let sleepTimerEndsAt = null;
+
+        function startSleepTimerFromInput() {
+            const input = document.getElementById('sleep-timer-input');
+            const minutes = parseFloat(input.value);
+            if (!minutes || minutes <= 0) {
+                alert('اكتب عدد الدقائق الأول');
+                return;
+            }
+            setSleepTimer(minutes);
+        }
+
+        function setSleepTimer(minutes) {
+            clearInterval(sleepTimerInterval);
+            sleepTimerEndsAt = Date.now() + minutes * 60 * 1000;
+
+            document.getElementById('sleep-timer-input').style.display = 'none';
+            document.querySelector('.sleep-timer-go-btn:not(#sleep-timer-cancel)').style.display = 'none';
+            document.getElementById('sleep-timer-cancel').style.display = 'inline-block';
+            document.getElementById('sleep-timer-remaining').style.display = 'inline';
+
+            updateSleepTimerDisplay();
+            sleepTimerInterval = setInterval(updateSleepTimerDisplay, 1000);
+        }
+
+        function updateSleepTimerDisplay() {
+            const remainingMs = sleepTimerEndsAt - Date.now();
+            const display = document.getElementById('sleep-timer-remaining');
+
+            if (remainingMs <= 0) {
+                // وقف أي صوت شغال
+                if (surahPlaying) toggleSurahPlayback();
+                if (quranPlaying) toggleQuranRadio();
+                cancelSleepTimer();
+                return;
+            }
+
+            const totalMin = Math.floor(remainingMs / 60000);
+            const s = Math.floor((remainingMs % 60000) / 1000);
+            if (totalMin >= 60) {
+                const h = Math.floor(totalMin / 60);
+                const m = totalMin % 60;
+                display.innerText = `⏳ متبقي ${h} س ${m} د`;
+            } else {
+                display.innerText = `⏳ متبقي ${totalMin}:${s < 10 ? '0' + s : s}`;
+            }
+        }
+
+        function cancelSleepTimer() {
+            clearInterval(sleepTimerInterval);
+            sleepTimerInterval = null;
+            sleepTimerEndsAt = null;
+            document.getElementById('sleep-timer-input').style.display = '';
+            document.getElementById('sleep-timer-input').value = '';
+            document.querySelector('.sleep-timer-go-btn:not(#sleep-timer-cancel)').style.display = '';
+            document.getElementById('sleep-timer-cancel').style.display = 'none';
+            document.getElementById('sleep-timer-remaining').style.display = 'none';
+        }
+
         // --- تشغيل سورة محددة أونلاين (mp3quran.net API) ---
         let surahAudio = null;
         let surahPlaying = false;
         let reciterList = [];
+        let repeatMode = false;
+        let autoNextMode = false;
 
         const surahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
         "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
@@ -1158,17 +1399,19 @@
             try {
                 const res = await fetch('https://mp3quran.net/api/v3/reciters?language=ar&rewaya=1');
                 const data = await res.json();
-                reciterList = data.reciters || [];
+                let list = (data.reciters || []).filter(r => r.moshaf && r.moshaf[0]);
+                // ترتيب أبجدي عربي
+                list.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+                reciterList = list;
                 reciterSelect.innerHTML = '';
                 reciterList.forEach((r, idx) => {
-                    const moshaf = r.moshaf && r.moshaf[0];
-                    if (!moshaf) return;
                     const opt = document.createElement('option');
                     opt.value = idx;
                     opt.innerText = r.name;
                     reciterSelect.appendChild(opt);
                 });
                 populateSurahSelect();
+                restoreLastSelection();
             } catch (e) {
                 console.error('Error loading reciters:', e);
                 reciterSelect.innerHTML = '<option value="">تعذر تحميل القراء</option>';
@@ -1184,6 +1427,26 @@
                 opt.innerText = `${i + 1}. ${name}`;
                 surahSelect.appendChild(opt);
             });
+        }
+
+        // --- حفظ واسترجاع آخر اختيار (قارئ وسورة) ---
+        function saveLastSelection() {
+            const reciterIdx = document.getElementById('quran-reciter-select').value;
+            const surahNum = document.getElementById('quran-surah-select').value;
+            localStorage.setItem('lastReciterName', reciterList[reciterIdx]?.name || '');
+            localStorage.setItem('lastSurahNum', surahNum);
+        }
+
+        function restoreLastSelection() {
+            const lastReciterName = localStorage.getItem('lastReciterName');
+            const lastSurahNum = localStorage.getItem('lastSurahNum');
+            if (lastReciterName) {
+                const idx = reciterList.findIndex(r => r.name === lastReciterName);
+                if (idx !== -1) document.getElementById('quran-reciter-select').value = idx;
+            }
+            if (lastSurahNum) {
+                document.getElementById('quran-surah-select').value = lastSurahNum;
+            }
         }
 
         function buildSurahUrl() {
@@ -1209,6 +1472,7 @@
                 }
 
                 if (quranPlaying) toggleQuranRadio(); // وقف الإذاعة عشان ميحصلش تداخل
+                saveLastSelection();
 
                 if (!surahAudio) surahAudio = new Audio();
                 surahAudio.src = url;
@@ -1224,6 +1488,7 @@
                     const reciterName = document.getElementById('quran-reciter-select').selectedOptions[0].innerText;
                     const surahName = document.getElementById('quran-surah-select').selectedOptions[0].innerText;
                     nowPlayingEl.innerText = `▶ ${surahName} - ${reciterName}`;
+                    updateFocusPlayerWidget();
                 }).catch(e => {
                     console.error('Error playing surah:', e);
                     nowPlayingEl.innerText = "⚠️ تعذر تشغيل السورة، جرّب قارئ آخر";
@@ -1231,15 +1496,26 @@
 
                 surahAudio.ontimeupdate = updateSurahProgress;
                 surahAudio.onended = () => {
+                    if (repeatMode) {
+                        surahAudio.currentTime = 0;
+                        surahAudio.play();
+                        return;
+                    }
+                    if (autoNextMode) {
+                        playNextSurah();
+                        return;
+                    }
                     surahPlaying = false;
                     btn.innerHTML = "▶";
                     btn.classList.remove('playing');
+                    updateFocusPlayerWidget();
                 };
             } else {
                 surahAudio.pause();
                 surahPlaying = false;
                 btn.innerHTML = "▶";
                 btn.classList.remove('playing');
+                updateFocusPlayerWidget();
             }
         }
 
@@ -1247,6 +1523,7 @@
             if (!surahAudio) return;
             const cur = document.getElementById('surah-current-time');
             const dur = document.getElementById('surah-duration');
+            const seekBar = document.getElementById('surah-seek');
             const fmt = (s) => {
                 if (isNaN(s)) return "0:00";
                 const m = Math.floor(s / 60);
@@ -1255,6 +1532,158 @@
             };
             cur.innerText = fmt(surahAudio.currentTime);
             dur.innerText = fmt(surahAudio.duration);
+            if (!isNaN(surahAudio.duration) && !seekBar.matches(':active')) {
+                seekBar.value = (surahAudio.currentTime / surahAudio.duration) * 100;
+            }
+            updateFocusPlayerWidget();
+        }
+
+        function seekSurah(percent) {
+            if (!surahAudio || isNaN(surahAudio.duration)) return;
+            surahAudio.currentTime = (percent / 100) * surahAudio.duration;
+        }
+
+        function seekRelative(seconds) {
+            if (!surahAudio) return;
+            surahAudio.currentTime = Math.max(0, Math.min(surahAudio.duration || 0, surahAudio.currentTime + seconds));
+        }
+
+        function restartSurah() {
+            if (!surahAudio) return;
+            surahAudio.currentTime = 0;
+            if (!surahPlaying) {
+                surahAudio.play();
+                surahPlaying = true;
+                document.getElementById('btn-surah').innerHTML = "⏸";
+                document.getElementById('btn-surah').classList.add('playing');
+                updateFocusPlayerWidget();
+            }
+        }
+
+        function toggleRepeatMode() {
+            repeatMode = !repeatMode;
+            const btn = document.getElementById('btn-repeat-mode');
+            if (repeatMode) {
+                autoNextMode = false;
+                document.getElementById('btn-autonext-mode').style.background = 'transparent';
+                document.getElementById('btn-autonext-mode').style.color = '#aaa';
+                document.getElementById('btn-autonext-mode').style.borderColor = '#4a5468';
+                btn.style.background = 'var(--accent-color)';
+                btn.style.color = '#1a1005';
+                btn.style.borderColor = 'var(--accent-color)';
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = '#aaa';
+                btn.style.borderColor = '#4a5468';
+            }
+        }
+
+        function toggleAutoNextMode() {
+            autoNextMode = !autoNextMode;
+            const btn = document.getElementById('btn-autonext-mode');
+            if (autoNextMode) {
+                repeatMode = false;
+                document.getElementById('btn-repeat-mode').style.background = 'transparent';
+                document.getElementById('btn-repeat-mode').style.color = '#aaa';
+                document.getElementById('btn-repeat-mode').style.borderColor = '#4a5468';
+                btn.style.background = 'var(--accent-color)';
+                btn.style.color = '#1a1005';
+                btn.style.borderColor = 'var(--accent-color)';
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = '#aaa';
+                btn.style.borderColor = '#4a5468';
+            }
+        }
+
+        function playNextSurah() {
+            const surahSelect = document.getElementById('quran-surah-select');
+            const nextIndex = surahSelect.selectedIndex + 1;
+            if (nextIndex >= surahSelect.options.length) {
+                // آخر سورة (الناس) - وقف التشغيل
+                surahPlaying = false;
+                document.getElementById('btn-surah').innerHTML = "▶";
+                document.getElementById('btn-surah').classList.remove('playing');
+                updateFocusPlayerWidget();
+                return;
+            }
+            surahSelect.selectedIndex = nextIndex;
+            saveLastSelection();
+
+            const url = buildSurahUrl();
+            const nowPlayingEl = document.getElementById('surah-now-playing');
+            if (!url) return;
+
+            surahAudio.src = url;
+            nowPlayingEl.innerText = "⏳ جاري التحميل...";
+            surahAudio.play().then(() => {
+                surahPlaying = true;
+                document.getElementById('btn-surah').innerHTML = "⏸";
+                document.getElementById('btn-surah').classList.add('playing');
+                const reciterName = document.getElementById('quran-reciter-select').selectedOptions[0].innerText;
+                const surahName = document.getElementById('quran-surah-select').selectedOptions[0].innerText;
+                nowPlayingEl.innerText = `▶ ${surahName} - ${reciterName}`;
+                updateFocusPlayerWidget();
+            }).catch(e => {
+                console.error('Error playing next surah:', e);
+                nowPlayingEl.innerText = "⚠️ تعذر تشغيل السورة التالية";
+            });
+        }
+
+        // --- المشغل الصوتي العائم في وضع التركيز ---
+        function updateFocusPlayerWidget() {
+            const widget = document.getElementById('focus-player-widget');
+            const icon = document.getElementById('focus-player-icon');
+            const title = document.getElementById('focus-player-title');
+            const toggleBtn = document.getElementById('focus-player-toggle');
+            const seekWrap = document.getElementById('focus-player-seek-wrap');
+            const seekBar = document.getElementById('focus-player-seek');
+            const curEl = document.getElementById('focus-player-current');
+            const durEl = document.getElementById('focus-player-duration');
+
+            const fmt = (s) => {
+                if (isNaN(s) || s === undefined) return "0:00";
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60);
+                return `${m}:${sec < 10 ? '0' + sec : sec}`;
+            };
+
+            if (surahPlaying && surahAudio) {
+                widget.classList.add('visible');
+                icon.innerText = "📖";
+                const surahName = document.getElementById('quran-surah-select').selectedOptions[0]?.innerText || '';
+                const reciterName = document.getElementById('quran-reciter-select').selectedOptions[0]?.innerText || '';
+                title.innerText = `${surahName} - ${reciterName}`;
+                toggleBtn.innerHTML = "⏸";
+                seekWrap.classList.add('active');
+                if (!isNaN(surahAudio.duration) && !seekBar.matches(':active')) {
+                    seekBar.value = (surahAudio.currentTime / surahAudio.duration) * 100;
+                }
+                curEl.innerText = fmt(surahAudio.currentTime);
+                durEl.innerText = fmt(surahAudio.duration);
+            } else if (quranPlaying && quranRadio) {
+                widget.classList.add('visible');
+                icon.innerText = "📻";
+                title.innerText = document.getElementById('quran-radio-select').selectedOptions[0]?.innerText || 'إذاعة القرآن';
+                toggleBtn.innerHTML = "⏸";
+                seekWrap.classList.remove('active');
+            } else {
+                widget.classList.remove('visible');
+            }
+        }
+
+        function focusPlayerToggle() {
+            if (surahPlaying) {
+                toggleSurahPlayback();
+            } else if (quranPlaying) {
+                toggleQuranRadio();
+            }
+        }
+
+        function focusSeek(percent) {
+            if (surahPlaying) {
+                seekSurah(percent);
+            }
         }
 
         function setSurahVolume(value) {
@@ -2089,6 +2518,7 @@
             if(document.body.classList.contains('focus-active')) {
                 showAthkar();
                 athkarInterval = setInterval(showAthkar, 8000);
+                updateFocusPlayerWidget();
             } else {
                 clearInterval(athkarInterval);
                 document.getElementById('athkar-box').style.opacity = '';
