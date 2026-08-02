@@ -335,6 +335,258 @@
             white-space: nowrap;
         }
 
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: #ccc;
+            margin-bottom: 4px;
+            background: rgba(255,255,255,0.02);
+        }
+        .playlist-item.now-playing {
+            background: var(--accent-color-soft);
+            color: var(--accent-light);
+        }
+        .playlist-item button {
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .playlist-item button:hover { color: var(--danger-color); }
+
+        /* --- قائمة التشغيل: تصميم مبسط --- */
+        .add-to-playlist-btn {
+            width: 100%;
+            margin-top: 8px;
+            background: var(--accent-color-soft);
+            border: 1px solid transparent;
+            color: var(--accent-light);
+            border-radius: 10px;
+            padding: 9px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.2s;
+        }
+        .add-to-playlist-btn:hover {
+            background: var(--accent-color);
+            color: #1a1005;
+        }
+
+        .playlist-card {
+            margin-top: 12px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 14px;
+        }
+        .playlist-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+        .playlist-select-dropdown {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 6px 10px;
+            padding-right: 26px;
+        }
+        .playlist-icon-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--card-border);
+            color: var(--secondary-text);
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .playlist-icon-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-light);
+        }
+        .playlist-subheader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            user-select: none;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .playlist-collapse-arrow {
+            color: var(--secondary-text);
+            font-size: 0.75rem;
+            transition: transform 0.25s;
+            display: inline-block;
+        }
+        .playlist-card.collapsed .playlist-collapse-arrow {
+            transform: rotate(-90deg);
+        }
+        .playlist-items-collapsed {
+            max-height: 260px;
+            overflow-y: auto;
+            transition: max-height 0.25s ease;
+            padding-left: 2px;
+        }
+        .playlist-card.collapsed .playlist-items-collapsed,
+        .playlist-card.collapsed .playlist-empty {
+            display: none;
+        }
+        .playlist-card.collapsed #playlist-controls {
+            margin-top: 0;
+        }
+        .playlist-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .playlist-count-badge {
+            background: var(--accent-color);
+            color: #1a1005;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 1px 8px;
+        }
+        #btn-clear-playlist {
+            background: transparent;
+            border: none;
+            color: var(--secondary-text);
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.2s;
+        }
+        #btn-clear-playlist:hover { color: var(--danger-color); }
+
+        .playlist-empty {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--secondary-text);
+            padding: 14px 6px;
+        }
+
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            background: rgba(255,255,255,0.03);
+            transition: 0.2s;
+        }
+        .playlist-item-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .playlist-item-num {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            color: var(--secondary-text);
+            font-size: 0.68rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .playlist-item-text {
+            min-width: 0;
+        }
+        .playlist-item-surah {
+            font-size: 0.82rem;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .playlist-item-reciter {
+            font-size: 0.68rem;
+            color: var(--secondary-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .playlist-item.now-playing {
+            background: var(--accent-color-soft);
+        }
+        .playlist-item.now-playing .playlist-item-num {
+            background: var(--accent-color);
+            color: #1a1005;
+        }
+        .playlist-item-remove {
+            background: transparent;
+            border: none;
+            color: var(--secondary-text);
+            cursor: pointer;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            padding: 2px 6px;
+        }
+        .playlist-item-remove:hover { color: var(--danger-color); }
+
+        #playlist-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .playlist-play-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-color));
+            color: #1a1005;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.2s;
+        }
+        .playlist-play-btn:hover { transform: translateY(-1px); }
+        .playlist-repeat-btn {
+            background: transparent;
+            border: 1px solid #4a5468;
+            color: var(--secondary-text);
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .playlist-repeat-btn.active {
+            background: var(--accent-color);
+            color: #1a1005;
+            border-color: var(--accent-color);
+        }
+        #playlist-now {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--accent-light);
+            margin-top: 8px;
+        }
+
         /* --- كارت الإعدادات --- */
         .main-card { text-align: center; }
         .grid-inputs {
@@ -1039,6 +1291,34 @@
                     <select id="quran-surah-select" style="width:100%;">
                         <!-- تتملى بجافاسكريبت -->
                     </select>
+                    <button class="add-to-playlist-btn" onclick="addToPlaylist()">➕ إضافة السورة دي لقائمتي</button>
+
+                    <div class="playlist-card">
+                        <div class="playlist-card-header">
+                            <select id="playlist-select" onchange="switchPlaylist(this.value)" class="playlist-select-dropdown"></select>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <button id="btn-new-playlist" onclick="createNewPlaylist()" title="قائمة جديدة" class="playlist-icon-btn">➕</button>
+                                <button id="btn-delete-playlist" onclick="deleteCurrentPlaylist()" title="حذف القائمة دي" class="playlist-icon-btn">🗑</button>
+                            </div>
+                        </div>
+                        <div class="playlist-subheader" id="playlist-toggle-header" onclick="togglePlaylistCollapse()">
+                            <span class="playlist-title">🎧 <span id="playlist-count" class="playlist-count-badge">0</span> سورة</span>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <button id="btn-clear-playlist" onclick="event.stopPropagation(); clearPlaylist()" style="display:none;">مسح الكل</button>
+                                <span id="playlist-collapse-arrow" class="playlist-collapse-arrow">▾</span>
+                            </div>
+                        </div>
+
+                        <div id="playlist-empty" class="playlist-empty">لسه القائمة فاضية، ضيف أول سورة من فوق ✨</div>
+                        <div id="playlist-items" class="playlist-items-collapsed"></div>
+
+                        <div id="playlist-controls" style="display:none;">
+                            <button id="btn-playlist-play" class="playlist-play-btn" onclick="togglePlaylistPlayback()">▶ تشغيل القائمة</button>
+                            <button id="btn-playlist-repeat" class="playlist-repeat-btn" onclick="togglePlaylistRepeat()" title="كرر القائمة">🔁</button>
+                        </div>
+                        <div id="playlist-now"></div>
+                    </div>
+
                     <div class="sound-header-row" style="margin-top:8px;">
                         <div class="sound-label" id="surah-now-playing" style="font-size:0.8rem; color:#999;">اختر قارئ وسورة</div>
                         <button class="play-btn" id="btn-surah" onclick="toggleSurahPlayback()">▶</button>
@@ -1412,6 +1692,7 @@
                 });
                 populateSurahSelect();
                 restoreLastSelection();
+                renderPlaylist();
             } catch (e) {
                 console.error('Error loading reciters:', e);
                 reciterSelect.innerHTML = '<option value="">تعذر تحميل القراء</option>';
@@ -1471,6 +1752,9 @@
                     return;
                 }
 
+                playlistMode = false;
+                updatePlaylistPlayButton();
+
                 if (quranPlaying) toggleQuranRadio(); // وقف الإذاعة عشان ميحصلش تداخل
                 saveLastSelection();
 
@@ -1496,6 +1780,10 @@
 
                 surahAudio.ontimeupdate = updateSurahProgress;
                 surahAudio.onended = () => {
+                    if (playlistMode) {
+                        playPlaylistNext();
+                        return;
+                    }
                     if (repeatMode) {
                         surahAudio.currentTime = 0;
                         surahAudio.play();
@@ -1594,6 +1882,259 @@
                 btn.style.color = '#aaa';
                 btn.style.borderColor = '#4a5468';
             }
+        }
+
+        // --- قوائم تشغيل متعددة ---
+        let allPlaylists = JSON.parse(localStorage.getItem('allPlaylists') || 'null');
+        if (!allPlaylists) {
+            // ترحيل القائمة القديمة (لو المستخدم كان عنده قائمة واحدة قبل كده)
+            const oldPlaylist = JSON.parse(localStorage.getItem('customPlaylist') || 'null');
+            allPlaylists = { "قائمتي": oldPlaylist || [] };
+        }
+        let activePlaylistName = localStorage.getItem('activePlaylistName') || Object.keys(allPlaylists)[0];
+        if (!allPlaylists[activePlaylistName]) activePlaylistName = Object.keys(allPlaylists)[0];
+        let customPlaylist = allPlaylists[activePlaylistName];
+        let playlistMode = false;
+        let playlistIndex = 0;
+        let playlistRepeat = false;
+
+        function renderPlaylistSelect() {
+            const select = document.getElementById('playlist-select');
+            select.innerHTML = '';
+            Object.keys(allPlaylists).forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.innerText = `📑 ${name}`;
+                if (name === activePlaylistName) opt.selected = true;
+                select.appendChild(opt);
+            });
+            document.getElementById('btn-delete-playlist').style.display = Object.keys(allPlaylists).length > 1 ? 'inline-block' : 'none';
+        }
+
+        function switchPlaylist(name) {
+            if (playlistMode) {
+                surahAudio.pause();
+                surahPlaying = false;
+                playlistMode = false;
+                document.getElementById('btn-surah').innerHTML = "▶";
+                document.getElementById('btn-surah').classList.remove('playing');
+                updateFocusPlayerWidget();
+            }
+            activePlaylistName = name;
+            localStorage.setItem('activePlaylistName', activePlaylistName);
+            customPlaylist = allPlaylists[activePlaylistName];
+            playlistIndex = 0;
+            renderPlaylist();
+        }
+
+        function createNewPlaylist() {
+            const name = prompt('اسم القائمة الجديدة:');
+            if (!name || !name.trim()) return;
+            const trimmed = name.trim();
+            if (allPlaylists[trimmed]) {
+                alert('فيه قائمة بنفس الاسم ده أصلاً');
+                return;
+            }
+            allPlaylists[trimmed] = [];
+            saveAllPlaylists();
+            switchPlaylist(trimmed);
+            renderPlaylistSelect();
+        }
+
+        function deleteCurrentPlaylist() {
+            if (Object.keys(allPlaylists).length <= 1) return;
+            if (!confirm(`متأكد إنك عايز تحذف قائمة "${activePlaylistName}" بالكامل؟`)) return;
+            delete allPlaylists[activePlaylistName];
+            saveAllPlaylists();
+            const remaining = Object.keys(allPlaylists)[0];
+            switchPlaylist(remaining);
+            renderPlaylistSelect();
+        }
+
+        function saveAllPlaylists() {
+            localStorage.setItem('allPlaylists', JSON.stringify(allPlaylists));
+        }
+
+        function addToPlaylist() {
+            const reciterIdx = document.getElementById('quran-reciter-select').value;
+            const surahNum = document.getElementById('quran-surah-select').value;
+            const reciterName = document.getElementById('quran-reciter-select').selectedOptions[0]?.innerText;
+            const surahName = document.getElementById('quran-surah-select').selectedOptions[0]?.innerText;
+            if (!reciterName || !surahName) return;
+
+            customPlaylist.push({ reciterIdx: parseInt(reciterIdx), reciterName, surahNum: parseInt(surahNum), surahName });
+            savePlaylist();
+            renderPlaylist();
+        }
+
+        function removeFromPlaylist(idx) {
+            customPlaylist.splice(idx, 1);
+            savePlaylist();
+            renderPlaylist();
+        }
+
+        function clearPlaylist() {
+            if (!confirm('متأكد إنك عايز تمسح كل السور في القائمة دي؟')) return;
+            customPlaylist.length = 0;
+            playlistMode = false;
+            savePlaylist();
+            renderPlaylist();
+        }
+
+        function savePlaylist() {
+            allPlaylists[activePlaylistName] = customPlaylist;
+            saveAllPlaylists();
+        }
+
+        function togglePlaylistCollapse() {
+            document.querySelector('.playlist-card').classList.toggle('collapsed');
+        }
+
+        function renderPlaylist() {
+            renderPlaylistSelect();
+            const emptyEl = document.getElementById('playlist-empty');
+            const itemsEl = document.getElementById('playlist-items');
+            const controlsEl = document.getElementById('playlist-controls');
+            const clearBtn = document.getElementById('btn-clear-playlist');
+            const countBadge = document.getElementById('playlist-count');
+
+            countBadge.innerText = customPlaylist.length;
+            const hasItems = customPlaylist.length > 0;
+            emptyEl.style.display = hasItems ? 'none' : 'block';
+            controlsEl.style.display = hasItems ? 'flex' : 'none';
+            clearBtn.style.display = hasItems ? 'inline-block' : 'none';
+
+            itemsEl.innerHTML = customPlaylist.map((item, idx) => `
+                <div class="playlist-item ${playlistMode && idx === playlistIndex ? 'now-playing' : ''}">
+                    <div class="playlist-item-info">
+                        <span class="playlist-item-num">${playlistMode && idx === playlistIndex ? '▶' : idx + 1}</span>
+                        <div class="playlist-item-text">
+                            <div class="playlist-item-surah">${item.surahName}</div>
+                            <div class="playlist-item-reciter">${item.reciterName}</div>
+                        </div>
+                    </div>
+                    <button class="playlist-item-remove" onclick="removeFromPlaylist(${idx})" title="إزالة">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function togglePlaylistRepeat() {
+            playlistRepeat = !playlistRepeat;
+            document.getElementById('btn-playlist-repeat').classList.toggle('active', playlistRepeat);
+        }
+
+        function togglePlaylistPlayback() {
+            if (!customPlaylist.length) return;
+
+            if (playlistMode && surahPlaying) {
+                // إيقاف مؤقت
+                surahAudio.pause();
+                surahPlaying = false;
+                updatePlaylistPlayButton();
+                document.getElementById('btn-surah').innerHTML = "▶";
+                document.getElementById('btn-surah').classList.remove('playing');
+                updateFocusPlayerWidget();
+            } else if (playlistMode && !surahPlaying) {
+                // استكمال
+                surahAudio.play();
+                surahPlaying = true;
+                updatePlaylistPlayButton();
+                document.getElementById('btn-surah').innerHTML = "⏸";
+                document.getElementById('btn-surah').classList.add('playing');
+                updateFocusPlayerWidget();
+            } else {
+                // بداية جديدة من أول القائمة
+                playlistMode = true;
+                playlistIndex = 0;
+                playPlaylistItem(playlistIndex);
+            }
+        }
+
+        function updatePlaylistPlayButton() {
+            const btn = document.getElementById('btn-playlist-play');
+            if (playlistMode && surahPlaying) {
+                btn.innerHTML = "⏸ إيقاف مؤقت";
+            } else if (playlistMode && !surahPlaying) {
+                btn.innerHTML = "▶ استكمال";
+            } else {
+                btn.innerHTML = "▶ تشغيل القائمة";
+            }
+        }
+
+        function playPlaylistItem(idx) {
+            const item = customPlaylist[idx];
+            if (!item) return;
+
+            if (quranPlaying) toggleQuranRadio();
+
+            const matchedIdx = reciterList.findIndex(r => r.name === item.reciterName);
+            document.getElementById('quran-reciter-select').value = matchedIdx !== -1 ? matchedIdx : item.reciterIdx;
+            document.getElementById('quran-surah-select').value = item.surahNum;
+
+            const url = buildSurahUrl();
+            const nowPlayingEl = document.getElementById('surah-now-playing');
+            const playlistNowEl = document.getElementById('playlist-now');
+            const btn = document.getElementById('btn-surah');
+            const progressRow = document.getElementById('surah-progress-row');
+            if (!url) return;
+
+            if (!surahAudio) surahAudio = new Audio();
+            surahAudio.src = url;
+            surahAudio.volume = 0.7;
+            nowPlayingEl.innerText = "⏳ جاري التحميل...";
+            playlistNowEl.innerText = `▶ السورة ${idx + 1} من ${customPlaylist.length}: ${item.surahName}`;
+
+            surahAudio.play().then(() => {
+                surahPlaying = true;
+                btn.innerHTML = "⏸";
+                btn.classList.add('playing');
+                progressRow.style.display = 'block';
+                nowPlayingEl.innerText = `▶ ${item.surahName} - ${item.reciterName}`;
+                updatePlaylistPlayButton();
+                renderPlaylist();
+                updateFocusPlayerWidget();
+            }).catch(e => {
+                console.error('Error playing playlist item:', e);
+                nowPlayingEl.innerText = "⚠️ تعذر تشغيل السورة";
+            });
+
+            surahAudio.ontimeupdate = updateSurahProgress;
+            surahAudio.onended = () => {
+                if (playlistMode) {
+                    playPlaylistNext();
+                } else {
+                    surahPlaying = false;
+                    btn.innerHTML = "▶";
+                    btn.classList.remove('playing');
+                    updateFocusPlayerWidget();
+                }
+            };
+        }
+
+        function playPlaylistNext() {
+            const nextIdx = playlistIndex + 1;
+            if (nextIdx >= customPlaylist.length) {
+                if (playlistRepeat) {
+                    playlistIndex = 0;
+                    playPlaylistItem(0);
+                } else {
+                    playlistMode = false;
+                    surahPlaying = false;
+                    document.getElementById('btn-surah').innerHTML = "▶";
+                    document.getElementById('btn-surah').classList.remove('playing');
+                    document.getElementById('playlist-now').innerText = "✅ انتهت القائمة";
+                    updatePlaylistPlayButton();
+                    renderPlaylist();
+                    updateFocusPlayerWidget();
+                }
+                return;
+            }
+            playlistIndex = nextIdx;
+            playPlaylistItem(playlistIndex);
+        }
+
+        function playPlaylistNextFromEnded() {
+            if (playlistMode) playPlaylistNext();
         }
 
         function playNextSurah() {
