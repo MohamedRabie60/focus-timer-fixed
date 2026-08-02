@@ -1759,8 +1759,12 @@
                 saveLastSelection();
 
                 if (!surahAudio) surahAudio = new Audio();
-                surahAudio.src = url;
-                surahAudio.volume = 0.7;
+
+                // لو نفس السورة اللي كانت شغالة قبل كده، كمّل من نفس المكان بدل ما تبدأ من الأول
+                if (surahAudio.src !== url) {
+                    surahAudio.src = url;
+                    surahAudio.volume = 0.7;
+                }
 
                 nowPlayingEl.innerText = "⏳ جاري التحميل...";
 
